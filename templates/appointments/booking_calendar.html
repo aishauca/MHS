@@ -1,0 +1,152 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Book an Appointment - UCA Mental Health Services{% endblock %}
+
+{% block extra_css %}
+<style>
+    #calendar {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+    .counselor-filter {
+        margin-bottom: 20px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="mb-4">Book an Appointment</h1>
+    
+    <div class="card mb-4">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">Select a Counselor (Optional)</h4>
+        </div>
+        <div class="card-body counselor-filter">
+            <div class="row">
+                <div class="col-md-6">
+                    <select id="counselorSelect" class="form-select">
+                        <option value="all">All Counselors</option>
+                        {% for counselor in counselors %}
+                        <option value="{{ counselor.id }}">{{ counselor.get_full_name|default:counselor.username }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <button id="filterButton" class="btn btn-primary">Filter</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="card">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">Available Appointment Slots</h4>
+        </div>
+        <div class="card-body">
+            <div id="calendar"></div>
+        </div>
+    </div>
+</div>
+
+<!-- Booking Modal -->
+<div class="modal fade" id="bookingModal" tabindex="-1" aria-labelledby="bookingModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="bookingModalLabel">Book Appointment</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p><strong>Date:</strong> <span id="appointmentDate"></span></p>
+                <p><strong>Time:</strong> <span id="appointmentTime"></span></p>
+                <p><strong>Counselor:</strong> <span id="appointmentCounselor"></span></p>
+                
+                <form id="bookingForm" method="post" action="">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="appointmentReason" class="form-label">Reason for Appointment</label>
+                        <textarea id="appointmentReason" name="reason" class="form-control" rows="4" required></textarea>
+                        <div class="form-text">Briefly describe the reason for your appointment.</div>
+                    </div>
+                    <input type="hidden" name="time_slot_id" id="timeSlotId">
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="confirmBooking">Book Appointment</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var calendarEl = document.getElementById('calendar');
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'timeGridWeek',
+            headerToolbar: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'dayGridMonth,timeGridWeek,timeGridDay'
+            },
+            slotMinTime: '09:00:00',
+            slotMaxTime: '18:00:00',
+            allDaySlot: false,
+            events: '{% url "appointments:get_available_slots" %}',
+            eventClick: function(info) {
+                // Show booking modal
+                var slot = info.event;
+                var startTime = new Date(slot.start);
+                var endTime = new Date(slot.end);
+                
+                // Format date and time
+                var dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+                var timeOptions = { hour: '2-digit', minute: '2-digit' };
+                
+                document.getElementById('appointmentDate').textContent = startTime.toLocaleDateString(undefined, dateOptions);
+                document.getElementById('appointmentTime').textContent = 
+                    startTime.toLocaleTimeString([], timeOptions) + ' - ' + 
+                    endTime.toLocaleTimeString([], timeOptions);
+                document.getElementById('appointmentCounselor').textContent = slot.title.replace('Available with ', '');
+                document.getElementById('timeSlotId').value = slot.id;
+                
+                // Set form action URL
+                document.getElementById('bookingForm').action = 
+                    '{% url "appointments:create_appointment_from_slot" 0 %}'.replace('0', slot.id);
+                
+                // Show modal
+                var bookingModal = new bootstrap.Modal(document.getElementById('bookingModal'));
+                bookingModal.show();
+            }
+        });
+        
+        calendar.render();
+        
+        // Filter button functionality
+        document.getElementById('filterButton').addEventListener('click', function() {
+            var counselorId = document.getElementById('counselorSelect').value;
+            var eventsUrl = '';
+            
+            if (counselorId === 'all') {
+                eventsUrl = '{% url "appointments:get_available_slots" %}';
+            } else {
+                eventsUrl = '{% url "appointments:get_counselor_slots" 0 %}'.replace('0', counselorId);
+            }
+            
+            // Remove old events and add new ones
+            calendar.removeAllEvents();
+            calendar.addEventSource(eventsUrl);
+        });
+        
+        // Handle booking submission
+        document.getElementById('confirmBooking').addEventListener('click', function() {
+            document.getElementById('bookingForm').submit();
+        });
+    });
+</script>
+{% endblock %}

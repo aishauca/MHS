@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Book Appointment - UCA Mental Health Services{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="card-title mb-0">Book an Appointment</h2>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-info">
+                        <p><strong>Counselor:</strong> {{ time_slot.counselor.get_full_name|default:time_slot.counselor.username }}</p>
+                        <p><strong>Date:</strong> {{ time_slot.date }}</p>
+                        <p><strong>Time:</strong> {{ time_slot.start_time }} - {{ time_slot.end_time }}</p>
+                    </div>
+                    
+                    <form method="post">
+                        {% csrf_token %}
+                        {{ form|crispy }}
+                        <button type="submit" class="btn btn-primary">Book Appointment</button>
+                        <a href="{% url 'appointments:booking_calendar' %}" class="btn btn-secondary">Cancel</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

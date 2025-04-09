@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %}Complete Appointment - UCA Mental Health Services{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    <h2 class="card-title mb-0">Complete Appointment</h2>
+                </div>
+                <div class="card-body">
+                    <p>Are you sure you want to mark this appointment as completed?</p>
+                    
+                    <div class="alert alert-info">
+                        <p><strong>Date & Time:</strong> {{ appointment.date_time }}</p>
+                        <p><strong>Student:</strong> {{ appointment.user.get_full_name|default:appointment.user.username }}</p>
+                        <p><strong>Reason:</strong> {{ appointment.reason }}</p>
+                    </div>
+                    
+                    <form method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-success">Yes, Mark as Completed</button>
+                        <a href="{% url 'appointments:view_appointment' appointment.id %}" class="btn btn-secondary">Cancel</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

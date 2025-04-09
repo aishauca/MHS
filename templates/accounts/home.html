@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block title %}Home - UCA Mental Health Services{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 offset-md-2 text-center">
+        <h1 class="display-4 mb-4">UCA Mental Health Services</h1>
+        <p class="lead">Supporting the mental health and well-being of the University of Central Asia community.</p>
+        <hr class="my-4">
+        <p>Schedule appointments with mental health professionals, access resources, and participate in our anonymous forum.</p>
+        <div class="mt-4">
+            <a href="{% url 'appointments:my_appointments' %}" class="btn btn-primary btn-lg me-2">Schedule an Appointment</a>
+            <a href="#" class="btn btn-secondary btn-lg">Browse Resources</a>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-5">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Appointments</h5>
+                <p class="card-text">Schedule appointments with mental health professionals at your convenience.</p>
+                <a href="#" class="btn btn-primary">Book Now</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Resources</h5>
+                <p class="card-text">Access a variety of mental health resources and educational materials.</p>
+                <a href="#" class="btn btn-primary">Browse Resources</a>
+            </div>
+        </div>
+    </div>
+   
+</div>
+{% endblock %}
+
+{% if user.is_authenticated %}
+<a href="{% url 'appointments:my_appointments' %}" class="btn btn-primary btn-lg me-2">Schedule an Appointment</a>
+{% else %}
+<a href="{% url 'account_login' %}" class="btn btn-primary btn-lg me-2">Login to Schedule</a>
+{% endif %}

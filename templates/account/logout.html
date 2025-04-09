@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %}Log Out - UCA Mental Health Services{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-6 offset-md-3">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h2 class="card-title mb-0">Log Out</h2>
+            </div>
+            <div class="card-body">
+                <p>Are you sure you want to log out?</p>
+                <form method="post" action="{% url 'account_logout' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">Yes, Log Out</button>
+                    <a href="/" class="btn btn-secondary">Cancel</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

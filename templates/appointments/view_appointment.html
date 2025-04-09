@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+{% block title %}View Appointment - UCA Mental Health Services{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="card-title mb-0">Appointment Details</h2>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-md-4 font-weight-bold">Date & Time:</div>
+                        <div class="col-md-8">{{ appointment.date_time }}</div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-4 font-weight-bold">Status:</div>
+                        <div class="col-md-8">
+                            <span class="badge {% if appointment.status == 'scheduled' %}bg-primary{% elif appointment.status == 'completed' %}bg-success{% else %}bg-danger{% endif %}">
+                                {{ appointment.get_status_display }}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-4 font-weight-bold">
+                            {% if user.user_type == 'counselor' %}
+                                Student:
+                            {% else %}
+                                Counselor:
+                            {% endif %}
+                        </div>
+                        <div class="col-md-8">
+                            {% if user.user_type == 'counselor' %}
+                                {{ appointment.user.get_full_name|default:appointment.user.username }}
+                            {% else %}
+                                {{ appointment.counselor.get_full_name|default:appointment.counselor.username }}
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-4 font-weight-bold">Reason:</div>
+                        <div class="col-md-8">{{ appointment.reason }}</div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-4 font-weight-bold">Created:</div>
+                        <div class="col-md-8">{{ appointment.created_at }}</div>
+                    </div>
+                    
+                    <div class="mt-4">
+                        {% if appointment.status == 'scheduled' %}
+                            {% if user.user_type == 'counselor' %}
+                                <a href="{% url 'appointments:complete_appointment' appointment.id %}" class="btn btn-success">Mark as Completed</a>
+                            {% endif %}
+                            <a href="{% url 'appointments:cancel_appointment' appointment.id %}" class="btn btn-danger">Cancel Appointment</a>
+                        {% endif %}
+                        
+                        {% if user.user_type == 'counselor' %}
+                            <a href="{% url 'accounts:counselor_dashboard' %}" class="btn btn-secondary">Back to Dashboard</a>
+                        {% else %}
+                            <a href="{% url 'accounts:profile' %}" class="btn btn-secondary">Back to Profile</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

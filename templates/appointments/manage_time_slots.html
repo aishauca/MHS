@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block title %}Manage Time Slots - UCA Mental Health Services{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="mb-4">Manage Your Available Time Slots</h1>
+    
+    <div class="mb-3">
+        <a href="{% url 'appointments:add_time_slot' %}" class="btn btn-primary">Add New Time Slot</a>
+        <a href="{% url 'accounts:counselor_dashboard' %}" class="btn btn-secondary">Back to Dashboard</a>
+    </div>
+    
+    <div class="card">
+        <div class="card-header bg-primary text-white">
+            <h3 class="card-title mb-0">Your Available Time Slots</h3>
+        </div>
+        <div class="card-body">
+            {% if time_slots %}
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Start Time</th>
+                            <th>End Time</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for slot in time_slots %}
+                        <tr>
+                            <td>{{ slot.date }}</td>
+                            <td>{{ slot.start_time }}</td>
+                            <td>{{ slot.end_time }}</td>
+                            <td>
+                                {% if slot.is_booked %}
+                                <span class="badge bg-danger">Booked</span>
+                                {% else %}
+                                <span class="badge bg-success">Available</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if not slot.is_booked %}
+                                <a href="{% url 'appointments:delete_time_slot' slot.id %}" class="btn btn-sm btn-danger">Delete</a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p>You haven't added any time slots yet.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

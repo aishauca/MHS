@@ -1,0 +1,10 @@
+env/
+.env
+.env/
+venv/
+venv_old/
+.venv/
+.idea/
+.vscode/
+node_modules/
+*.log
