@@ -1,13 +1,15 @@
+<!-- In templates/appointments/my_appointments.html -->
 {% extends 'base.html' %}
 
-{% block title %}My Appointments - UCA Mental Health Services{% endblock %}
+{% block title %}Appointment History - UCA Mental Health Services{% endblock %}
 
 {% block content %}
 <div class="container">
-    <h1 class="mb-4">My Appointments</h1>
+    <h1 class="mb-4">Appointment History</h1>
     
+    <!-- Book Appointment Button -->
     <div class="mb-3">
-        <a href="{% url 'appointments:my_appointments' %}" class="btn btn-primary">Schedule Another Appointment</a>
+        <a href="{% url 'appointments:booking_calendar' %}" class="btn btn-primary">Book New Appointment</a>
     </div>
     
     <!-- Upcoming Appointments -->
@@ -54,32 +56,26 @@
         </div>
     </div>
     
-    <!-- Past Appointments -->
-    <div class="card">
-        <div class="card-header bg-secondary text-white">
-            <h3 class="card-title mb-0">Past Appointments</h3>
+    <!-- Completed Appointments -->
+    <div class="card mb-4">
+        <div class="card-header bg-success text-white">
+            <h3 class="card-title mb-0">Completed Appointments</h3>
         </div>
         <div class="card-body">
-            {% if past_appointments %}
+            {% if completed_appointments %}
                 <table class="table">
                     <thead>
                         <tr>
                             <th>Date & Time</th>
                             <th>Counselor</th>
-                            <th>Status</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {% for appointment in past_appointments %}
+                        {% for appointment in completed_appointments %}
                         <tr>
                             <td>{{ appointment.date_time }}</td>
                             <td>{{ appointment.counselor.get_full_name|default:appointment.counselor.username }}</td>
-                            <td>
-                                <span class="badge {% if appointment.status == 'scheduled' %}bg-primary{% elif appointment.status == 'completed' %}bg-success{% else %}bg-danger{% endif %}">
-                                    {{ appointment.get_status_display }}
-                                </span>
-                            </td>
                             <td>
                                 <a href="{% url 'appointments:view_appointment' appointment.id %}" class="btn btn-sm btn-outline-primary">View</a>
                             </td>
@@ -88,7 +84,42 @@
                     </tbody>
                 </table>
             {% else %}
-                <p>You don't have any past appointments.</p>
+                <p>You don't have any completed appointments.</p>
+            {% endif %}
+        </div>
+    </div>
+    
+    <!-- Cancelled Appointments -->
+    <div class="card">
+        <div class="card-header bg-danger text-white">
+            <h3 class="card-title mb-0">Cancelled Appointments</h3>
+        </div>
+        <div class="card-body">
+            {% if cancelled_appointments %}
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Date & Time</th>
+                            <th>Counselor</th>
+                            <th>Cancellation Reason</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for appointment in cancelled_appointments %}
+                        <tr>
+                            <td>{{ appointment.date_time }}</td>
+                            <td>{{ appointment.counselor.get_full_name|default:appointment.counselor.username }}</td>
+                            <td>{{ appointment.cancellation_reason|default:"-" }}</td>
+                            <td>
+                                <a href="{% url 'appointments:view_appointment' appointment.id %}" class="btn btn-sm btn-outline-primary">View</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p>You don't have any cancelled appointments.</p>
             {% endif %}
         </div>
     </div>

@@ -7,7 +7,7 @@ from django.http import JsonResponse
 from .models import Appointment, TimeSlot
 from accounts.models import User
 from accounts.views import user_type_required
-from .forms import AppointmentForm, TimeSlotForm, CalendarAppointmentForm, CounselorAvailabilityForm
+from .forms import AppointmentForm, TimeSlotForm, CalendarAppointmentForm, CounselorAvailabilityForm, CancellationForm
 
 @login_required
 def view_appointment(request, appointment_id):
@@ -23,6 +23,9 @@ def view_appointment(request, appointment_id):
     }
     return render(request, 'appointments/view_appointment.html', context)
 
+
+# In appointments/views.py, update the cancel_appointment view:
+
 @login_required
 def cancel_appointment(request, appointment_id):
     """Allow users or counselors to cancel an appointment"""
@@ -33,29 +36,70 @@ def cancel_appointment(request, appointment_id):
         appointment = get_object_or_404(Appointment, id=appointment_id, user=request.user)
     
     if request.method == 'POST':
-        appointment.status = 'cancelled'
-        appointment.save()
-        
-        # If there's a time slot linked to this appointment, mark it as available again
-        try:
-            time_slot = TimeSlot.objects.get(appointment=appointment)
-            time_slot.is_booked = False
-            time_slot.appointment = None
-            time_slot.save()
-        except TimeSlot.DoesNotExist:
-            pass
+        form = CancellationForm(request.POST)
+        if form.is_valid():
+            appointment.status = 'cancelled'
+            appointment.cancellation_reason = form.cleaned_data.get('cancellation_reason')
+            appointment.save()
             
-        messages.success(request, 'Appointment cancelled successfully.')
-        
-        if request.user.user_type == 'counselor':
-            return redirect('accounts:counselor_dashboard')
-        else:
-            return redirect('accounts:profile')
+            # If there's a time slot linked to this appointment, mark it as available again
+            try:
+                time_slot = TimeSlot.objects.get(appointment=appointment)
+                time_slot.is_booked = False
+                time_slot.appointment = None
+                time_slot.save()
+            except TimeSlot.DoesNotExist:
+                pass
+                
+            messages.success(request, 'Appointment cancelled successfully.')
+            
+            if request.user.user_type == 'counselor':
+                return redirect('accounts:counselor_dashboard')
+            else:
+                return redirect('accounts:profile')
+    else:
+        form = CancellationForm()
     
     context = {
         'appointment': appointment,
+        'form': form,
     }
     return render(request, 'appointments/cancel_appointment.html', context)
+
+
+# @login_required
+# def cancel_appointment(request, appointment_id):
+#     """Allow users or counselors to cancel an appointment"""
+#     # Get the appointment, ensuring the user has permission
+#     if request.user.user_type == 'counselor':
+#         appointment = get_object_or_404(Appointment, id=appointment_id, counselor=request.user)
+#     else:
+#         appointment = get_object_or_404(Appointment, id=appointment_id, user=request.user)
+    
+#     if request.method == 'POST':
+#         appointment.status = 'cancelled'
+#         appointment.save()
+        
+#         # If there's a time slot linked to this appointment, mark it as available again
+#         try:
+#             time_slot = TimeSlot.objects.get(appointment=appointment)
+#             time_slot.is_booked = False
+#             time_slot.appointment = None
+#             time_slot.save()
+#         except TimeSlot.DoesNotExist:
+#             pass
+            
+#         messages.success(request, 'Appointment cancelled successfully.')
+        
+#         if request.user.user_type == 'counselor':
+#             return redirect('accounts:counselor_dashboard')
+#         else:
+#             return redirect('accounts:profile')
+    
+#     context = {
+#         'appointment': appointment,
+#     }
+#     return render(request, 'appointments/cancel_appointment.html', context)
 
 @login_required
 @user_type_required(['counselor'])
@@ -74,9 +118,11 @@ def complete_appointment(request, appointment_id):
     }
     return render(request, 'appointments/complete_appointment.html', context)
 
+# In appointments/views.py, update the my_appointments view:
+
 @login_required
 def my_appointments(request):
-    """View all appointments for the logged-in user"""
+    """View all appointments for the logged-in user (serves as History)"""
     upcoming_appointments = Appointment.objects.filter(
         user=request.user,
         date_time__gte=timezone.now(),
@@ -87,9 +133,21 @@ def my_appointments(request):
         date_time__lt=timezone.now(),
     ).order_by('-date_time')
     
+    completed_appointments = Appointment.objects.filter(
+        user=request.user,
+        status='completed'
+    ).order_by('-date_time')
+    
+    cancelled_appointments = Appointment.objects.filter(
+        user=request.user,
+        status='cancelled'
+    ).order_by('-date_time')
+    
     context = {
         'upcoming_appointments': upcoming_appointments,
         'past_appointments': past_appointments,
+        'completed_appointments': completed_appointments,
+        'cancelled_appointments': cancelled_appointments,
     }
     return render(request, 'appointments/my_appointments.html', context)
 
@@ -142,11 +200,19 @@ def create_appointment_from_slot(request, slot_id):
     return render(request, 'appointments/create_appointment.html', context)
 
 # Counselor time slot management views
+
 @login_required
 @user_type_required(['counselor'])
 def counselor_calendar(request):
     """Calendar view for counselors to manage their availability"""
-    return render(request, 'appointments/counselor_calendar.html')
+    # Create an instance of the form to pass to the template
+    form = CounselorAvailabilityForm()
+    
+    context = {
+        'form': form
+    }
+    
+    return render(request, 'appointments/counselor_calendar.html', context)
 
 @login_required
 @user_type_required(['counselor'])

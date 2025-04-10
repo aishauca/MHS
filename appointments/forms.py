@@ -11,7 +11,7 @@ class AppointmentForm(forms.ModelForm):
         model = Appointment
         fields = ['reason']
         widgets = {
-            'reason': forms.Textarea(attrs={'rows': 4, 'class': 'form-control'}),
+            'reason': forms.Textarea(attrs={'rows': 4, 'class': 'form-control', 'placeholder': 'Optional: Describe the reason for your appointment'}),
         }
 
 
@@ -55,14 +55,18 @@ class TimeSlotForm(forms.ModelForm):
         return cleaned_data
 
 
+# Update the CalendarAppointmentForm:
 class CalendarAppointmentForm(forms.Form):
     """Form for booking an appointment from a calendar selection"""
     time_slot_id = forms.IntegerField(widget=forms.HiddenInput())
     reason = forms.CharField(
-        label="Reason for appointment",
-        widget=forms.Textarea(attrs={'rows': 4, 'class': 'form-control'}),
-        help_text="Briefly describe the reason for your appointment"
+        label="Reason for appointment (optional)",
+        widget=forms.Textarea(attrs={'rows': 4, 'class': 'form-control', 'placeholder': 'Optional: Describe the reason for your appointment'}),
+        required=False,
+        help_text="You can leave this blank if you prefer"
     )
+
+
     
     def clean_time_slot_id(self):
         time_slot_id = self.cleaned_data.get('time_slot_id')
@@ -77,6 +81,18 @@ class CalendarAppointmentForm(forms.Form):
         except TimeSlot.DoesNotExist:
             raise forms.ValidationError("The selected time slot is not available.")
 
+
+# In appointments/forms.py, add:
+
+class CancellationForm(forms.Form):
+    """Form for providing a reason when cancelling an appointment"""
+    cancellation_reason = forms.CharField(
+        label="Reason for cancellation (optional)",
+        widget=forms.Textarea(attrs={'rows': 4, 'class': 'form-control'}),
+        required=False,
+        help_text="You can leave this blank if you prefer"
+    )
+    
 
 class CounselorAvailabilityForm(forms.Form):
     """Form for counselors to add multiple time slots at once"""

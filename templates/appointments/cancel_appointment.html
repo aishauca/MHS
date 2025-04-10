@@ -1,4 +1,6 @@
+<!-- In templates/appointments/cancel_appointment.html -->
 {% extends 'base.html' %}
+{% load crispy_forms_tags %}
 
 {% block title %}Cancel Appointment - UCA Mental Health Services{% endblock %}
 
@@ -20,11 +22,14 @@
                         {% else %}
                             <p><strong>Counselor:</strong> {{ appointment.counselor.get_full_name|default:appointment.counselor.username }}</p>
                         {% endif %}
+                        {% if appointment.reason %}
                         <p><strong>Reason:</strong> {{ appointment.reason }}</p>
+                        {% endif %}
                     </div>
                     
                     <form method="post">
                         {% csrf_token %}
+                        {{ form|crispy }}
                         <button type="submit" class="btn btn-danger">Yes, Cancel Appointment</button>
                         <a href="{% url 'appointments:view_appointment' appointment.id %}" class="btn btn-secondary">No, Keep Appointment</a>
                     </form>

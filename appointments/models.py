@@ -1,6 +1,7 @@
 from django.db import models
 from accounts.models import User
 
+# In appointments/models.py, update the Appointment model:
 
 class Appointment(models.Model):
     STATUS_CHOICES = (
@@ -14,13 +15,13 @@ class Appointment(models.Model):
                                 limit_choices_to={'user_type': 'counselor'})
     date_time = models.DateTimeField()
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='scheduled')
-    reason = models.TextField(help_text="Brief description of the reason for appointment")
+    reason = models.TextField(help_text="Brief description of the reason for appointment", blank=True, null=True)  # Make it optional
+    cancellation_reason = models.TextField(blank=True, null=True)  # Add cancellation reason
     notes = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     
     def __str__(self):
         return f"Appointment with {self.counselor.username} on {self.date_time.strftime('%Y-%m-%d %H:%M')}"
-
 
 class AppointmentReminder(models.Model):
     appointment = models.ForeignKey(Appointment, on_delete=models.CASCADE, related_name='reminders')

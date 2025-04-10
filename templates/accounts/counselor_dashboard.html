@@ -1,3 +1,4 @@
+<!-- In templates/accounts/counselor_dashboard.html -->
 {% extends 'base.html' %}
 
 {% block title %}Counselor Dashboard - UCA Mental Health Services{% endblock %}
@@ -10,7 +11,7 @@
     <div class="row mb-4">
         <div class="col-md-4">
             <div class="card text-white bg-primary">
-                <div class="card-body">
+                <div class="card-body text-center">
                     <h5 class="card-title">Total Appointments</h5>
                     <h2>{{ total_appointments }}</h2>
                 </div>
@@ -18,7 +19,7 @@
         </div>
         <div class="col-md-4">
             <div class="card text-white bg-success">
-                <div class="card-body">
+                <div class="card-body text-center">
                     <h5 class="card-title">Completed</h5>
                     <h2>{{ completed_appointments }}</h2>
                 </div>
@@ -26,11 +27,22 @@
         </div>
         <div class="col-md-4">
             <div class="card text-white bg-danger">
-                <div class="card-body">
+                <div class="card-body text-center">
                     <h5 class="card-title">Cancelled</h5>
-                    <h2>{{ cancelled_appointments }}</h2>
+                    <h2>{{ cancelled_appointments_count }}</h2>
                 </div>
             </div>
+        </div>
+    </div>
+    
+    <!-- Manage Availability -->
+    <div class="card mb-4">
+        <div class="card-header bg-info text-white">
+            <h3 class="card-title mb-0">Manage Your Availability</h3>
+        </div>
+        <div class="card-body">
+            <p>Set your available time slots for students to book appointments.</p>
+            <a href="{% url 'appointments:counselor_calendar' %}" class="btn btn-primary">Manage Availability Calendar</a>
         </div>
     </div>
     
@@ -55,12 +67,12 @@
                         <tr>
                             <td>{{ appointment.date_time }}</td>
                             <td>{{ appointment.user.get_full_name|default:appointment.user.username }}</td>
-                            <td>{{ appointment.reason }}</td>
+                            <td>{{ appointment.reason|default:"-" }}</td>
                             <td>
                                 <div class="btn-group">
-                                    <a href="#" class="btn btn-sm btn-outline-primary">View</a>
-                                    <a href="#" class="btn btn-sm btn-outline-success">Complete</a>
-                                    <a href="#" class="btn btn-sm btn-outline-danger">Cancel</a>
+                                    <a href="{% url 'appointments:view_appointment' appointment.id %}" class="btn btn-sm btn-outline-primary">View</a>
+                                    <a href="{% url 'appointments:complete_appointment' appointment.id %}" class="btn btn-sm btn-outline-success">Complete</a>
+                                    <a href="{% url 'appointments:cancel_appointment' appointment.id %}" class="btn btn-sm btn-outline-danger">Cancel</a>
                                 </div>
                             </td>
                         </tr>
@@ -69,6 +81,41 @@
                 </table>
             {% else %}
                 <p>You don't have any upcoming appointments.</p>
+            {% endif %}
+        </div>
+    </div>
+    
+    <!-- Cancelled Appointments -->
+    <div class="card mb-4">
+        <div class="card-header bg-danger text-white">
+            <h3 class="card-title mb-0">Cancelled Appointments</h3>
+        </div>
+        <div class="card-body">
+            {% if cancelled_appointments %}
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Date & Time</th>
+                            <th>Student</th>
+                            <th>Cancellation Reason</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for appointment in cancelled_appointments %}
+                        <tr>
+                            <td>{{ appointment.date_time }}</td>
+                            <td>{{ appointment.user.get_full_name|default:appointment.user.username }}</td>
+                            <td>{{ appointment.cancellation_reason|default:"-" }}</td>
+                            <td>
+                                <a href="{% url 'appointments:view_appointment' appointment.id %}" class="btn btn-sm btn-outline-primary">View</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p>You don't have any cancelled appointments.</p>
             {% endif %}
         </div>
     </div>
@@ -87,6 +134,7 @@
                             <th>Student</th>
                             <th>Reason</th>
                             <th>Status</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -94,11 +142,17 @@
                         <tr>
                             <td>{{ appointment.date_time }}</td>
                             <td>{{ appointment.user.get_full_name|default:appointment.user.username }}</td>
-                            <td>{{ appointment.reason }}</td>
+                            <td>{{ appointment.reason|default:"-" }}</td>
                             <td>
                                 <span class="badge {% if appointment.status == 'completed' %}bg-success{% elif appointment.status == 'cancelled' %}bg-danger{% else %}bg-secondary{% endif %}">
                                     {{ appointment.get_status_display }}
                                 </span>
+                            </td>
+                            <td>
+                                <a href="{% url 'appointments:view_appointment' appointment.id %}" class="btn btn-sm btn-outline-primary">View</a>
+                                {% if appointment.status == 'scheduled' %}
+                                <a href="{% url 'appointments:complete_appointment' appointment.id %}" class="btn btn-sm btn-outline-success">Complete</a>
+                                {% endif %}
                             </td>
                         </tr>
                         {% endfor %}
@@ -110,17 +164,4 @@
         </div>
     </div>
 </div>
-
-<!-- Time Slot Management -->
-<div class="card mb-4">
-    <div class="card-header bg-info text-white">
-        <h3 class="card-title mb-0">Manage Your Availability</h3>
-    </div>
-    <div class="card-body">
-        <p>Set your available time slots for students to book appointments.</p>
-        <a href="{% url 'appointments:manage_time_slots' %}" class="btn btn-primary">Manage Time Slots</a>
-        <a href="{% url 'appointments:add_time_slot' %}" class="btn btn-success">Add New Time Slot</a>
-        <a href="{% url 'appointments:counselor_calendar' %}" class="btn btn-primary">Manage Availability Calendar</a>
-    </div>
-</div>
-{% endblock %} 
+{% endblock %}

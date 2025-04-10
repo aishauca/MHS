@@ -43,6 +43,14 @@
                         <div class="col-md-4 font-weight-bold">Reason:</div>
                         <div class="col-md-8">{{ appointment.reason }}</div>
                     </div>
+
+                    {% if appointment.status == 'cancelled' and appointment.cancellation_reason %}
+                    <div class="row mb-3">
+                         <div class="col-md-4 font-weight-bold">Cancellation Reason:</div>
+                         <div class="col-md-8">{{ appointment.cancellation_reason }}</div>
+                    </div>
+                    {% endif %}
+
                     <div class="row mb-3">
                         <div class="col-md-4 font-weight-bold">Created:</div>
                         <div class="col-md-8">{{ appointment.created_at }}</div>
