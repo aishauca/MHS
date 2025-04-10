@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block title %}Resource Categories - UCA Mental Health Services{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="mb-4">Resource Categories</h1>
+    
+    {% if user.is_superuser or user.user_type == 'counselor' %}
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="card bg-light">
+                <div class="card-body">
+                    <h5 class="card-title">Category Administration</h5>
+                    <a href="{% url 'resources:add_category' %}" class="btn btn-primary">Add New Category</a>
+                    <a href="{% url 'resources:resource_list' %}" class="btn btn-secondary">Back to Resources</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    
+    <div class="row">
+        {% for category in categories %}
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">{{ category.name }}</h5>
+                    {% if category.description %}
+                    <p class="card-text">{{ category.description }}</p>
+                    {% endif %}
+                    <a href="{% url 'resources:resource_list' %}?category={{ category.id }}" class="btn btn-primary">View Resources</a>
+                    
+                    {% if user.is_superuser or user.user_type == 'counselor' %}
+                    <div class="mt-2">
+                        <a href="{% url 'resources:edit_category' category.id %}" class="btn btn-sm btn-warning">Edit</a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <div class="alert alert-info">No resource categories available yet.</div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

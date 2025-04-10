@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ resource.title }} - UCA Mental Health Services{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <nav aria-label="breadcrumb" class="mb-4">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'resources:resource_list' %}">Resources</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'resources:resource_list' %}?category={{ resource.category.id }}">{{ resource.category.name }}</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">{{ resource.title }}</li>
+                </ol>
+            </nav>
+            
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="card-title mb-0">{{ resource.title }}</h2>
+                </div>
+                <div class="card-body">
+                    <div class="mb-4">
+                        <span class="badge bg-secondary">{{ resource.get_resource_type_display }}</span>
+                        <span class="badge bg-info">{{ resource.category.name }}</span>
+                    </div>
+                    
+                    <h5>Description</h5>
+                    <p>{{ resource.description }}</p>
+                    
+                    {% if resource.content %}
+                    <div class="my-4">
+                        <h5>Content</h5>
+                        <div class="resource-content">
+                            {{ resource.content|linebreaks }}
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    <div class="mt-4">
+                        {% if resource.file %}
+                        <a href="{{ resource.file.url }}" class="btn btn-primary" download>Download File</a>
+                        {% elif resource.external_url %}
+                        <a href="{{ resource.external_url }}" class="btn btn-primary" target="_blank">Visit External Resource</a>
+                        {% endif %}
+                        
+                        {% if user.is_superuser or user.user_type == 'counselor' %}
+                        <a href="{% url 'resources:edit_resource' resource.id %}" class="btn btn-warning">Edit Resource</a>
+                        <a href="{% url 'resources:delete_resource' resource.id %}" class="btn btn-danger">Delete Resource</a>
+                        {% endif %}
+                        
+                        <a href="{% url 'resources:resource_list' %}" class="btn btn-secondary">Back to Resources</a>
+                    </div>
+                </div>
+                <div class="card-footer text-muted">
+                    Added: {{ resource.created_at|date }} | Last Updated: {{ resource.updated_at|date }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

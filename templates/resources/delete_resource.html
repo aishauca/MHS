@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block title %}Delete Resource - UCA Mental Health Services{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card">
+                <div class="card-header bg-danger text-white">
+                    <h2 class="card-title mb-0">Delete Resource</h2>
+                </div>
+                <div class="card-body">
+                    <p>Are you sure you want to delete the following resource?</p>
+                    
+                    <div class="alert alert-info">
+                        <p><strong>Title:</strong> {{ resource.title }}</p>
+                        <p><strong>Type:</strong> {{ resource.get_resource_type_display }}</p>
+                        <p><strong>Category:</strong> {{ resource.category.name }}</p>
+                    </div>
+                    
+                    <p class="text-danger"><strong>Warning:</strong> This action cannot be undone.</p>
+                    
+                    <form method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger">Yes, Delete Resource</button>
+                        <a href="{% url 'resources:resource_detail' resource.slug %}" class="btn btn-secondary">Cancel</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

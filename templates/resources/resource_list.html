@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+
+{% block title %}Resources - UCA Mental Health Services{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="mb-4">Mental Health Resources</h1>
+    
+    {% if user.is_superuser or user.user_type == 'counselor' %}
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="card bg-light">
+                <div class="card-body">
+                    <h5 class="card-title">Resource Administration</h5>
+                    <div class="btn-group">
+                        <a href="{% url 'resources:add_resource' %}" class="btn btn-primary">Add New Resource</a>
+                        <a href="{% url 'resources:add_category' %}" class="btn btn-success">Add New Category</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    
+    <div class="row">
+        <!-- Category Sidebar -->
+        <div class="col-md-3">
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="card-title mb-0">Categories</h5>
+                </div>
+                <div class="card-body">
+                    <div class="list-group">
+                        <a href="{% url 'resources:resource_list' %}" class="list-group-item list-group-item-action {% if not selected_category %}active{% endif %}">
+                            All Resources
+                        </a>
+                        {% for category in categories %}
+                        <a href="{% url 'resources:resource_list' %}?category={{ category.id }}" class="list-group-item list-group-item-action {% if selected_category.id == category.id %}active{% endif %}">
+                            {{ category.name }}
+                        </a>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Resource List -->
+        <div class="col-md-9">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="card-title mb-0">
+                        {% if selected_category %}
+                            {{ selected_category.name }} Resources
+                        {% else %}
+                            All Resources
+                        {% endif %}
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {% if resources %}
+                        <div class="row">
+                            {% for resource in resources %}
+                            <div class="col-md-6 mb-4">
+                                <div class="card h-100">
+                                    <div class="card-body">
+                                        <h5 class="card-title">{{ resource.title }}</h5>
+                                        <p class="card-text text-muted">{{ resource.get_resource_type_display }}</p>
+                                        <p class="card-text">{{ resource.description|truncatewords:20 }}</p>
+                                        <a href="{% url 'resources:resource_detail' resource.slug %}" class="btn btn-primary">View Details</a>
+                                        
+                                        {% if resource.file %}
+                                        <a href="{{ resource.file.url }}" class="btn btn-outline-primary" download>Download</a>
+                                        {% elif resource.external_url %}
+                                        <a href="{{ resource.external_url }}" class="btn btn-outline-primary" target="_blank">External Link</a>
+                                        {% endif %}
+                                        
+                                        {% if user.is_superuser or user.user_type == 'counselor' %}
+                                        <div class="mt-2">
+                                            <a href="{% url 'resources:edit_resource' resource.id %}" class="btn btn-sm btn-warning">Edit</a>
+                                            <a href="{% url 'resources:delete_resource' resource.id %}" class="btn btn-sm btn-danger">Delete</a>
+                                        </div>
+                                        {% endif %}
+                                    </div>
+                                    <div class="card-footer text-muted">
+                                        Added: {{ resource.created_at|date }}
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p>No resources available in this category.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
