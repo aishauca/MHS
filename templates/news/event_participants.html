@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+
+{% block title %}Event Participants - UCA Mental Health Services{% endblock %}
+
+{% block content %}
+<div class="container">
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'news:event_list' %}">Events</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'news:event_detail' event.slug %}">{{ event.title }}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Participants</li>
+        </ol>
+    </nav>
+
+    <div class="card">
+        <div class="card-header bg-primary text-white">
+            <div class="d-flex justify-content-between align-items-center">
+                <h2 class="card-title mb-0">Participants: {{ event.title }}</h2>
+                <span class="badge bg-light text-dark">{{ registrants.count }} Registered</span>
+            </div>
+        </div>
+        <div class="card-body">
+            {% if registrants %}
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>User</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Registration Date</th>
+                                <th>Additional Info</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for registration in registrants %}
+                            <tr>
+                                <td>{{ forloop.counter }}</td>
+                                <td>{{ registration.user.get_full_name|default:registration.user.username }}</td>
+                                <td>{{ registration.user.email }}</td>
+                                <td>{{ registration.user.phone_number|default:"-" }}</td>
+                                <td>{{ registration.registration_date|date:"M d, Y" }}<br>{{ registration.registration_date|time:"g:i A" }}</td>
+                                <td>
+                                    {% if registration.additional_info %}
+                                        {{ registration.additional_info }}
+                                    {% else %}
+                                        <span class="text-muted">-</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Export options could be added here -->
+                <div class="mt-3">
+                    <a href="#" class="btn btn-outline-primary">Export to CSV</a>
+                    <a href="{% url 'news:event_detail' event.slug %}" class="btn btn-secondary">Back to Event</a>
+                </div>
+            {% else %}
+                <div class="alert alert-info">
+                    <p>No one has registered for this event yet.</p>
+                </div>
+                <a href="{% url 'news:event_detail' event.slug %}" class="btn btn-secondary">Back to Event</a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

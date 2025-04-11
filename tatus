@@ -1,0 +1,31 @@
+[33mcommit dea6d6a2023b0b7947a21c806b70a01b02e52f65[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmaster[m[33m)[m
+Author: Aisha Toichieva <aisha.toichieva_2025@ucentralasia.org>
+Date:   Thu Apr 10 16:36:35 2025 +0600
+
+    Implement resources section for Mental Health Services
+    
+    - Add resource and category management functionality
+    - Create resource listing and filtering by category
+    - Implement resource detail views with download options
+    - Add counselor dashboard integration for resource management
+    - Create forms for adding and editing resources and categories
+    - Implement proper permissions for counselors and admin users
+    - Fix URL patterns to ensure proper routing of resource requests
+
+[33mcommit df53aaad0f9aba75cb71b0016896f83d20593540[m
+Author: Aisha Toichieva <aisha.toichieva_2025@ucentralasia.org>
+Date:   Thu Apr 10 14:14:06 2025 +0600
+
+    Update appointment system: make reason optional, add cancellation reason, rename Appointments to History, fix navigation menu~
+
+[33mcommit e19f5e5b8d401280658a3a718dfc1ecac4a47bf3[m
+Author: Aisha Toichieva <aisha.toichieva_2025@ucentralasia.org>
+Date:   Thu Apr 10 00:00:20 2025 +0600
+
+    Fix typo in cancel_appointment.html filename
+
+[33mcommit 2eadd9614c58764da3db314c673be239f4a92491[m[33m ([m[1;31morigin/master[m[33m)[m
+Author: Aisha Toichieva <aisha.toichieva_2025@ucentralasia.org>
+Date:   Wed Apr 9 20:34:23 2025 +0600
+
+    initial commit

@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %}Cancel Registration - UCA Mental Health Services{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card">
+                <div class="card-header bg-danger text-white">
+                    <h2 class="card-title mb-0">Cancel Registration</h2>
+                </div>
+                <div class="card-body">
+                    <p>Are you sure you want to cancel your registration for the following event?</p>
+                    
+                    <div class="alert alert-info">
+                        <h5>{{ event.title }}</h5>
+                        <p><strong>Date & Time:</strong> {{ event.event_date|date:"F d, Y - g:i A" }}</p>
+                        <p><strong>Location:</strong> {{ event.location }}</p>
+                    </div>
+                    
+                    <form method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger">Yes, Cancel My Registration</button>
+                        <a href="{% url 'news:event_detail' event.slug %}" class="btn btn-secondary">No, Keep My Registration</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

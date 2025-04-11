@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+
+{% block title %}Manage Events - UCA Mental Health Services{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Manage Events</h1>
+        <a href="{% url 'news:add_event' %}" class="btn btn-primary">Add New Event</a>
+    </div>
+    
+    <div class="card">
+        <div class="card-header bg-primary text-white">
+            <h2 class="h4 mb-0">All Events</h2>
+        </div>
+        <div class="card-body">
+            {% if events %}
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Date</th>
+                                <th>Location</th>
+                                <th>Registration</th>
+                                <th>Participants</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for event in events %}
+                            <tr class="{% if event.is_past %}table-secondary{% endif %}">
+                                <td>
+                                    <strong>{{ event.title }}</strong>
+                                </td>
+                                <td>{{ event.event_date|date:"M d, Y" }}<br>{{ event.event_date|time:"g:i A" }}</td>
+                                <td>{{ event.location }}</td>
+                                <td>
+                                    {% if event.registration_required %}
+                                        <span class="badge bg-primary">Required</span>
+                                    {% else %}
+                                        <span class="badge bg-secondary">Not Required</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <a href="{% url 'news:event_participants' event.id %}">
+                                        {{ event.reg_count }}
+                                        {% if event.max_participants > 0 %}
+                                        <small class="text-muted">/ {{ event.max_participants }}</small>
+                                        {% endif %}
+                                    </a>
+                                </td>
+                                <td>
+                                    {% if event.is_past %}
+                                        <span class="badge bg-secondary">Past</span>
+                                    {% else %}
+                                        <span class="badge bg-success">Upcoming</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <div class="btn-group btn-group-sm">
+                                        <a href="{% url 'news:event_detail' event.slug %}" class="btn btn-outline-primary">View</a>
+                                        <a href="{% url 'news:edit_event' event.id %}" class="btn btn-outline-warning">Edit</a>
+                                        <a href="{% url 'news:delete_event' event.id %}" class="btn btn-outline-danger">Delete</a>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="alert alert-info">
+                    No events have been created yet. <a href="{% url 'news:add_event' %}">Add your first event</a>.
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

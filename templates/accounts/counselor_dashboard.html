@@ -155,4 +155,38 @@
         </div>
     </div>
 </div>
+
+
+<!-- Event Management -->
+<div class="card mb-4">
+    <div class="card-header bg-info text-white">
+        <h3 class="card-title mb-0">Manage Events</h3>
+    </div>
+    <div class="card-body">
+        <p>Create and manage mental health events and workshops for students.</p>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Event Management</h5>
+                        <p>Create, edit, or delete events and workshops.</p>
+                        <a href="{% url 'news:event_list' %}" class="btn btn-primary">View All Events</a>
+                        <a href="{% url 'news:add_event' %}" class="btn btn-success">Add New Event</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Registration Management</h5>
+                        <p>View and manage event registrations.</p>
+                        <a href="{% url 'news:manage_events' %}" class="btn btn-primary">Manage All Events</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 {% endblock %}

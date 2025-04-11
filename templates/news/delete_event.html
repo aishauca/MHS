@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block title %}Delete Event - UCA Mental Health Services{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card">
+                <div class="card-header bg-danger text-white">
+                    <h2 class="card-title mb-0">Delete Event</h2>
+                </div>
+                <div class="card-body">
+                    <p>Are you sure you want to delete the following event?</p>
+                    
+                    <div class="alert alert-info">
+                        <h5>{{ event.title }}</h5>
+                        <p><strong>Date & Time:</strong> {{ event.event_date|date:"F d, Y - g:i A" }}</p>
+                        <p><strong>Location:</strong> {{ event.location }}</p>
+                    </div>
+                    
+                    {% if event.registrations.count > 0 %}
+                    <div class="alert alert-warning">
+                        <p><strong>Warning:</strong> This event has {{ event.registrations.count }} registered participants. Deleting this event will also remove all registrations.</p>
+                    </div>
+                    {% endif %}
+                    
+                    <p class="text-danger"><strong>Warning:</strong> This action cannot be undone.</p>
+                    
+                    <form method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger">Yes, Delete Event</button>
+                        <a href="{% url 'news:event_detail' event.slug %}" class="btn btn-secondary">Cancel</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

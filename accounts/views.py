@@ -22,6 +22,22 @@ def home(request):
 
 # In accounts/views.py, update the counselor_dashboard view:
 
+
+def home(request):
+    # Get upcoming events
+    from news.models import Event
+    from django.utils import timezone
+    
+    upcoming_events = Event.objects.filter(
+        event_date__gte=timezone.now()
+    ).order_by('event_date')[:3]  # Get the 3 nearest upcoming events
+    
+    context = {
+        'upcoming_events': upcoming_events
+    }
+    
+    return render(request, 'accounts/home.html', context)
+
 @login_required
 @user_type_required(['counselor'])
 def counselor_dashboard(request):
