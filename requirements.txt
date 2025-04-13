@@ -32,3 +32,4 @@ virtualenv==20.25.1
 wheel==0.43.0
 whitenoise==6.9.0
 wrapt==1.16.0
+gunicorn
