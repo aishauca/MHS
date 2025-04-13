@@ -1,0 +1,12 @@
+/* Base styles */
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+footer {
+    margin-top: auto;
+}
+
+/* Custom styles can be added here based on your Figma design */
