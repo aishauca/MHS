@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %}Verification Email Sent - UCA Mental Health Services{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-6 offset-md-3">
+        <div class="card">
+            <div class="card-header bg-success text-white">
+                <h2 class="card-title mb-0">Verification Email Sent</h2>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-info">
+                    <p>Please check your UCA email inbox for a verification link.</p>
+                    <p>You need to verify your email address before you can log in.</p>
+                </div>
+                <p>If you don't see the email within a few minutes, check your spam folder or <a href="{% url 'account_email' %}">request a new verification email</a>.</p>
+                <a href="{% url 'account_login' %}" class="btn btn-primary">Return to Login</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

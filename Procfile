@@ -1,0 +1,1 @@
+web: gunicorn mhs_uca.wsgi

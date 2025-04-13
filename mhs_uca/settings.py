@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 import os
 from pathlib import Path
 from dotenv import load_dotenv
+import logging
+import logging.config 
 load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -23,12 +25,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv("SECRET_KEY")
+SECRET_KEY = os.getenv("SECRET_KEY", "django-insecure-k2#jtw_oep=qt)!^(&rag)sl3_76=!xt1mm#l1-^_qeq+9c-+k")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv("DEBUG", "False") == "True"
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "localhost,127.0.0.1").split(",")
 
 
 # Application definition
@@ -72,10 +74,13 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
+STATIC_ROOT = BASE_DIR / "staticfiles"
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",  # Add this line for static files
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -110,12 +115,20 @@ WSGI_APPLICATION = "mhs_uca.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+if os.getenv("DATABASE_URL"):
+    # Parse the DATABASE_URL env variable for production
+    import dj_database_url
+    DATABASES = {
+        'default': dj_database_url.config(default=os.getenv("DATABASE_URL"))
     }
-}
+else:
+    # Use SQLite for development
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
+        }
+    }
 
 
 # Password validation
@@ -149,11 +162,6 @@ USE_I18N = True
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.2/howto/static-files/
-
-STATIC_URL = "static/"
-
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
@@ -168,36 +176,51 @@ AUTHENTICATION_BACKENDS = [
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
-# ACCOUNT_EMAIL_REQUIRED = True
-# ACCOUNT_USERNAME_REQUIRED = True
-
-ACCOUNT_LOGIN_METHODS = {'email', 'username'} ## DEBUG
-ACCOUNT_LOGIN_METHODS = {'username', 'email'} ## DEBUG
-ACCOUNT_SIGNUP_FIELDS = ['email*', 'username*', 'password1*', 'password2*'] ## DEBUG
-
-ACCOUNT_EMAIL_VERIFICATION = 'optional'  # 'mandatory', 'optional', or 'none'
-# ACCOUNT_AUTHENTICATION_METHOD = 'username_email'
+# Authentication settings
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_USERNAME_REQUIRED = True
 ACCOUNT_UNIQUE_EMAIL = True
+ACCOUNT_AUTHENTICATION_METHOD = 'username_email'
 
-
+# Email verification settings
+# ACCOUNT_EMAIL_VERIFICATION = 'mandatory'  # Forces email verification
+ACCOUNT_EMAIL_VERIFICATION = 'none'
+ACCOUNT_CONFIRM_EMAIL_ON_GET = True
+ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 3
+ACCOUNT_EMAIL_SUBJECT_PREFIX = "[UCA Mental Health] "
+ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
 
 # Redirect URLs
-LOGIN_REDIRECT_URL = 'accounts:profile'  # We'll create this URL later
+LOGIN_REDIRECT_URL = 'accounts:profile'
 ACCOUNT_LOGOUT_ON_GET = False
 ACCOUNT_LOGOUT_REDIRECT_URL = '/'
 
-# Email backend settings (for development)
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-
-# Use custom signup form
+# Custom signup form
 ACCOUNT_FORMS = {
     'signup': 'accounts.forms.CustomSignupForm',
 }
 
-# For production, you would configure actual email settings:
-# EMAIL_HOST = 'smtp.example.com'
-# EMAIL_PORT = 587
-# EMAIL_USE_TLS = True
-# EMAIL_HOST_USER = 'your_email@example.com'
-# EMAIL_HOST_PASSWORD = 'your_password'
+# Email settings
+if DEBUG:
+    # Use console backend for development
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+else:
+    # Zoho email settings for production
+    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+    EMAIL_HOST = 'smtp.zoho.com'
+    EMAIL_PORT = 587
+    EMAIL_USE_TLS = True
+    EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', 'noreply@ucamhs.org')
+    EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', 'Mairambekovn@1')
+    DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', 'UCA Mental Health <noreply@ucamhs.org>')
 
+# Security settings for production
+if not DEBUG:
+    # HTTPS settings
+    CSRF_COOKIE_SECURE = True
+    SESSION_COOKIE_SECURE = True
+    SECURE_SSL_REDIRECT = os.getenv('SECURE_SSL_REDIRECT', 'True') == 'True'
+    SECURE_HSTS_SECONDS = 31536000  # 1 year
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
