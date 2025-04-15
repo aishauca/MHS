@@ -77,15 +77,15 @@
                             {% endif %}
                             
                             <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="/accounts/logout">Log Out</a></li>
+                            <li><a class="dropdown-item" href="{% url 'accounts:logout' %}">Log Out</a></li>
                         </ul>
                     </li>
                     {% else %}
                     <li class="nav-item auth-button">
-                        <a class="nav-link" href="/accounts/login/">Log In</a>
+                        <a class="nav-link" href="{% url 'accounts:login' %}">Log In</a>
                     </li>
                     <li class="nav-item auth-button sign-up">
-                        <a class="nav-link" href="/accounts/signup/">Sign Up</a>
+                        <a class="nav-link" href="{% url 'accounts:register' %}">Sign Up</a>
                     </li>
                     {% endif %}
                 </ul>

@@ -1,0 +1,34 @@
+
+{% extends 'base.html' %}
+
+{% block title %}Verification Error - UCA Mental Health Services{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 offset-md-3 mt-5">
+            <div class="card">
+                <div class="card-header bg-danger text-white">
+                    <h2 class="card-title mb-0">Verification Error</h2>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-danger">
+                        <h4 class="alert-heading">There was a problem with your verification link</h4>
+                        <p>We encountered an error while trying to verify your email address.</p>
+                        {% if error %}
+                        <p><small>Technical details: {{ error }}</small></p>
+                        {% endif %}
+                    </div>
+                    
+                    <p>Please try registering again with the same email address to receive a new verification link.</p>
+                    
+                    <div class="text-center mt-4">
+                        <a href="{% url 'accounts:register' %}" class="btn btn-primary">Register Again</a>
+                        <a href="{% url 'accounts:login' %}" class="btn btn-secondary">Back to Login</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

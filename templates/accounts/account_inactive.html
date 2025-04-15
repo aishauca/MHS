@@ -1,0 +1,38 @@
+
+{% extends 'base.html' %}
+
+{% block title %}Account Not Verified - UCA Mental Health Services{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 offset-md-3 mt-5">
+            <div class="card">
+                <div class="card-header bg-warning text-dark">
+                    <h2 class="card-title mb-0">Account Not Verified</h2>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-warning">
+                        <h4 class="alert-heading">Email Verification Required</h4>
+                        <p><strong>Your account has not been activated yet.</strong></p>
+                        <p>You need to verify your email address before you can log in. Please check your email inbox for a verification link that was sent when you registered.</p>
+                    </div>
+                    
+                    <div class="bg-light p-3 rounded mb-4">
+                        <h5>Didn't receive the verification email?</h5>
+                        <ul>
+                            <li>Check your spam/junk folder</li>
+                            <li>Make sure you're checking the email you used to register</li>
+                            <li>Try registering again with the same email address</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="text-center">
+                        <a href="{% url 'accounts:login' %}" class="btn btn-primary">Return to Login</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

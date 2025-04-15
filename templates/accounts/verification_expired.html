@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block title %}Verification Link Expired - UCA Mental Health Services{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 offset-md-3 mt-5">
+            <div class="card">
+                <div class="card-header bg-warning text-dark">
+                    <h2 class="card-title mb-0">Verification Link Expired</h2>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-warning">
+                        <h4 class="alert-heading">Your verification link has expired</h4>
+                        <p>The email verification link you clicked has expired or is no longer valid.</p>
+                    </div>
+                    
+                    <p>Please register again to receive a new verification link.</p>
+                    
+                    <div class="text-center mt-4">
+                        <a href="{% url 'accounts:register' %}" class="btn btn-primary">Register Again</a>
+                        <a href="{% url 'accounts:login' %}" class="btn btn-secondary">Back to Login</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

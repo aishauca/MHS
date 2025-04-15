@@ -14,21 +14,22 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+# mhs_uca/urls.py
 from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from accounts.views import home  # Import the home view directly
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('accounts/', include('allauth.urls')),
-    path('dashboard/', include('accounts.urls')),
+    path('accounts/', include('accounts.urls')),  # All auth URLs
     path('appointments/', include('appointments.urls')),
     path('resources/', include('resources.urls')),
     path('news/', include('news.urls')),
-    path('', include('accounts.urls')),  # Default to accounts app for home page
-
+    path('', home, name='home'),  # Direct route to home view instead of including all account URLs again
 ]
+
 # Serve media files in development
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

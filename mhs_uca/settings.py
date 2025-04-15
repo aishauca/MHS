@@ -30,9 +30,10 @@ INSTALLED_APPS = [
     # Third-party apps
     'crispy_forms',
     'crispy_bootstrap5',
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
+    # Remove these lines:
+    # 'allauth',
+    # 'allauth.account',
+    # 'allauth.socialaccount',
     # Your apps
     'accounts',
     'appointments',
@@ -62,7 +63,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    'allauth.account.middleware.AccountMiddleware',
+    # 'allauth.account.middleware.AccountMiddleware',
 ]
 
 ROOT_URLCONF = "mhs_uca.urls"
@@ -126,21 +127,46 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 # Django AllAuth Configuration
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
-    'allauth.account.auth_backends.AuthenticationBackend',
+    # 'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
-ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_USERNAME_REQUIRED = True
-ACCOUNT_UNIQUE_EMAIL = True
-ACCOUNT_AUTHENTICATION_METHOD = 'username_email'
-# ACCOUNT_EMAIL_VERIFICATION = 'none'
-ACCOUNT_CONFIRM_EMAIL_ON_GET = True
-ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 3
-ACCOUNT_EMAIL_SUBJECT_PREFIX = "[UCA Mental Health] "
-ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
+
+
+
+# ACCOUNT_EMAIL_REQUIRED = True
+# ACCOUNT_USERNAME_REQUIRED = True
+# ACCOUNT_UNIQUE_EMAIL = True
+# ACCOUNT_AUTHENTICATION_METHOD = 'username_email'
+# ACCOUNT_EMAIL_VERIFICATION = 'mandatory'  # Change from 'none' to 'mandatory'
+# ACCOUNT_CONFIRM_EMAIL_ON_GET = True
+# ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 3
+# ACCOUNT_EMAIL_SUBJECT_PREFIX = "[UCA Mental Health] "
+
+# LOGIN_REDIRECT_URL = 'accounts:profile'
+# ACCOUNT_LOGOUT_ON_GET = False
+# ACCOUNT_LOGOUT_REDIRECT_URL = '/'
+
+
+LOGIN_URL = 'accounts:login'
 LOGIN_REDIRECT_URL = 'accounts:profile'
-ACCOUNT_LOGOUT_ON_GET = False
-ACCOUNT_LOGOUT_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = 'accounts:home'
+
+
+
+# Add these new settings
+ACCOUNT_USER_MODEL_USERNAME_FIELD = 'username'
+ACCOUNT_USER_MODEL_EMAIL_FIELD = 'email'
+
+# Prevent users from being able to log in if they haven't confirmed their email
+ACCOUNT_EMAIL_CONFIRMATION_ANONYMOUS_REDIRECT_URL = 'account_login'
+ACCOUNT_EMAIL_CONFIRMATION_AUTHENTICATED_REDIRECT_URL = 'accounts:profile'
+
+# This setting controls whether a user is automatically logged in after confirming email
+# We'll keep it True so they get logged in after confirming
+ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
+
+
+
 
 ACCOUNT_FORMS = {
     'signup': 'accounts.forms.CustomSignupForm',

@@ -1,1 +1,16 @@
-templates/account/email/email_confirmation_message.txt
+{% load i18n %}
+{% autoescape off %}
+{% blocktrans %}Hello from UCA Mental Health Services!
+
+You're receiving this email because you (or someone else) used your email address to register an account on the UCA Mental Health Services platform.
+
+To confirm this is correct, please follow this link:
+{{ activate_url }}
+
+If you did not register for this account, you can safely ignore this email.
+
+Thank you,
+UCA Mental Health Services Team
+{% endblocktrans %}
+{% endautoescape %}
+

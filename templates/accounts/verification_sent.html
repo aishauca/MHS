@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block title %}Verification Email Sent - UCA Mental Health Services{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 offset-md-3 mt-5">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="card-title mb-0">Email Verification Required</h2>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-info">
+                        <h4 class="alert-heading">Thank you for registering!</h4>
+                        <p><strong>A verification email has been sent to {{ verification_email }}</strong></p>
+                        <p>You must verify your email address before you can log in. Please check your inbox and click on the verification link to activate your account.</p>
+                    </div>
+                    
+                    <div class="bg-light p-3 rounded mb-4">
+                        <h5>Didn't receive the email?</h5>
+                        <ul>
+                            <li>Check your spam/junk folder</li>
+                            <li>Verify you entered the correct email address</li>
+                            <li>Wait a few minutes - emails may be delayed</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="text-center">
+                        <a href="{% url 'accounts:login' %}" class="btn btn-primary">Return to Login</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
