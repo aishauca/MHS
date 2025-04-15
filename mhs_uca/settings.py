@@ -220,12 +220,15 @@ else:
 # Security settings for production
 if not DEBUG:
     # HTTPS settings
+
+    CSRF_TRUSTED_ORIGINS = os.getenv("CSRF_TRUSTED_ORIGINS", "").split(",")
+
     
-    CSRF_TRUSTED_ORIGINS = [
-        "https://ucamhs.org",
-        "https://www.ucamhs.org",  # Add this too if you support www
-        'https://*.railway.app',
-    ]
+    # CSRF_TRUSTED_ORIGINS = [
+    #     "https://ucamhs.org",
+    #     "https://www.ucamhs.org",  # Add this too if you support www
+    #     'https://*.railway.app',
+    # ]
     CSRF_COOKIE_DOMAIN = ".ucamhs.org"
 
     CSRF_COOKIE_SECURE = True
