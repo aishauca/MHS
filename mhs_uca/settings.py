@@ -225,7 +225,7 @@ if not DEBUG:
     "https://ucamhs.org",
     "https://www.ucamhs.org",  # Add this too if you support www
 ]
-   CSRF_COOKIE_DOMAIN = ".ucamhs.org"
+#    CSRF_COOKIE_DOMAIN = ".ucamhs.org"
 
     CSRF_COOKIE_SECURE = True
     SESSION_COOKIE_SECURE = True
