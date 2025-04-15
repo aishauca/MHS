@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseForbidden
+from django.http import HttpResponseForbidden, HttpResponse
 from functools import wraps
 from appointments.models import Appointment
 from django.utils import timezone
@@ -133,3 +133,12 @@ def edit_profile(request):
         'form': form,
     }
     return render(request, 'accounts/edit_profile.html', context)
+
+
+
+# Add this at the end of your views.py file
+def debug_view(request):
+    origin = request.META.get('HTTP_ORIGIN', 'No origin')
+    referer = request.META.get('HTTP_REFERER', 'No referer')
+    host = request.META.get('HTTP_HOST', 'No host')
+    return HttpResponse(f"Origin: {origin}<br>Referer: {referer}<br>Host: {host}")

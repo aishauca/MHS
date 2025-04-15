@@ -162,7 +162,17 @@ else:
 if not DEBUG:
     # Get CSRF trusted origins from environment and clean them
     # raw_origins = os.getenv("CSRF_TRUSTED_ORIGINS", "")
-    CSRF_TRUSTED_ORIGINS = ['https://ucamhs.org', 'https://web-production-9f134.up.railway.app','http://localhost:8000', 'http://127.0.0.1:8000', ]
+    # CSRF_TRUSTED_ORIGINS = ['https://ucamhs.org', 'https://web-production-9f134.up.railway.app','http://localhost:8000', 'http://127.0.0.1:8000', ]
+    CSRF_TRUSTED_ORIGINS = [
+    'https://ucamhs.org',
+    'http://ucamhs.org',
+    'https://*.ucamhs.org',
+    'http://*.ucamhs.org',
+    'https://web-production-9f134.up.railway.app',
+    'http://web-production-9f134.up.railway.app',
+    'https://*.railway.app',
+    'http://*.railway.app',
+    ]
     
     # CSRF_COOKIE_DOMAIN = ".ucamhs.org"
 
