@@ -1,12 +1,765 @@
-/* Base styles */
-body {
+/* UCA Mental Health Services - Enhanced styles
+   Created: April 15, 2025
+*/
+
+:root {
+    /* Main color palette - based on provided design */
+    --primary-color: #1a97d4;      /* Bright blue from images */
+    --primary-dark: #0d85c0;
+    --secondary-color: #6c757d;    /* Gray for secondary elements */
+    --accent-color: #f89e67;       /* Orange accent from image 2 */
+    --success-color: #4caf50;
+    --warning-color: #ff9800;
+    --danger-color: #f44336;
+    --light-color: #f8f9fa;
+    --dark-color: #333333;
+    
+    /* Text colors */
+    --text-dark: #333333;           /* Dark text from images */
+    --text-muted: #6c757d;
+    --text-light: #f8f9fa;
+    
+    /* Semantic colors */
+    --bg-subtle: #e6f7ff;           /* Light blue background from image 2 */
+    --accent-subtle: #f3f9fd;       /* Very light blue */
+  }
+  
+  /* Base styles */
+  body {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-}
-
-footer {
+    font-family: 'Roboto', 'Segoe UI', system-ui, -apple-system, sans-serif;
+    color: var(--text-dark);
+    background-color: #f9fbfd;
+    overflow-x: hidden;
+  }
+  
+  footer {
     margin-top: auto;
-}
+    border-top: 1px solid rgba(0,0,0,0.1);
+  }
+  
+  /* Typography */
+  h1, h2, h3, h4, h5, h6 {
+    font-weight: 600;
+  }
+  
+  .display-4 {
+    font-weight: 700;
+    color: var(--primary-color);
+  }
+  
+  .lead {
+    font-weight: 400;
+    line-height: 1.6;
+  }
+  
+  /* Button styling - based on the images */
+  .btn {
+    padding: 10px 24px;
+    border-radius: 6px;
+    font-weight: 500;
+    transition: all 0.3s;
+  }
+  
+  .btn-lg {
+    padding: 12px 30px;
+    font-size: 1.1rem;
+  }
+  
+  .btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    color: white;
+  }
+  
+  .btn-primary:hover, .btn-primary:focus {
+    background-color: var(--primary-dark);
+    border-color: var(--primary-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(26, 151, 212, 0.25);
+  }
+  
+  .btn-secondary {
+    background-color: #6c757d;
+    border-color: #6c757d;
+    color: white;
+  }
+  
+  .btn-secondary:hover {
+    background-color: #5a6268;
+    border-color: #5a6268;
+  }
+  
+  .btn-outline-primary {
+    border: 2px solid var(--primary-color);
+    color: var(--primary-color);
+    background-color: transparent;
+  }
+  
+  .btn-outline-primary:hover {
+    background-color: var(--primary-color);
+    color: white;
+    transform: translateY(-2px);
+  }
+  
+  /* Special button - "Login to Schedule" from image 2 */
+  .btn-login {
+    border-radius: 30px;
+    padding: 12px 30px;
+    border: 2px solid var(--primary-color);
+    color: var(--primary-color);
+    display: inline-flex;
+    align-items: center;
+    font-weight: 600;
+    transition: all 0.3s;
+  }
+  
+  .btn-login:hover {
+    background-color: var(--primary-color);
+    color: white;
+    transform: translateY(-2px);
+  }
+  
+  .btn-login i {
+    margin-left: 8px;
+  }
+  
+  .card {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    overflow: hidden;
+  }
+  
+  .card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  }
+  
+  .card-header.bg-primary {
+    background-color: var(--primary-color) !important;
+  }
+  
+  .card-header.bg-success {
+    background-color: var(--success-color) !important;
+  }
+  
+  .card-header.bg-danger {
+    background-color: var(--danger-color) !important;
+  }
+  
+  .bg-light {
+    background-color: var(--light-color) !important;
+  }
+  
+  /* Navigation styling - based on image 1 */
+  .navbar {
+    box-shadow: none;
+    background-color: white !important;
+    padding: 20px 0;
+  }
+  
+  .navbar-brand {
+    font-weight: 700;
+    font-size: 1.5rem;
+    color: var(--text-dark);
+  }
+  
+  .navbar-nav {
+    gap: 10px;
+  }
+  
+  .navbar-nav .nav-link {
+    font-weight: 500;
+    color: #666;
+    padding: 6px 12px;
+    transition: color 0.3s;
+  }
+  
+  .navbar-nav .nav-link:hover {
+    color: var(--primary-color);
+  }
+  
+  .navbar-nav .nav-link.active {
+    color: var(--primary-color);
+  }
+  
+  .navbar-toggler {
+    border: none;
+  }
+  
+  .navbar-toggler:focus {
+    box-shadow: none;
+  }
+  
+  /* Login/Signup buttons */
+  .nav-item.auth-button .nav-link {
+    color: var(--primary-color);
+    font-weight: 600;
+  }
+  
+  .nav-item.auth-button.sign-up .nav-link {
+    background-color: var(--primary-color);
+    color: white;
+    border-radius: 20px;
+    padding: 6px 20px;
+  }
+  
+  /* Dropdown styling */
+  .dropdown-menu {
+    border: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+  }
+  
+  .dropdown-item {
+    padding: 8px 16px;
+    font-weight: 500;
+  }
+  
+  .dropdown-item:hover {
+    background-color: var(--bg-subtle);
+  }
+  
+  /* Hero section styling - based on images */
+  .hero-section {
+    background-color: white;
+    padding: 80px 0 40px;
+    margin-bottom: 40px;
+    text-align: center;
+  }
+  
+  .hero-section h1 {
+    font-size: 3rem;
+    margin-bottom: 1.5rem;
+    color: var(--text-dark);
+  }
+  
+  .hero-section h1 .highlight {
+    color: var(--primary-color);
+  }
+  
+  .hero-section .lead {
+    color: var(--text-muted);
+    max-width: 80%;
+    margin: 0 auto 2rem;
+    font-size: 1.2rem;
+  }
+  
+  .hero-section .hero-buttons {
+    margin-top: 2rem;
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+  }
+  
+  /* Process Steps Section - based on image 2 */
+  .process-steps-section {
+    padding: 60px 0;
+    background-color: var(--bg-subtle);
+    border-radius: 12px;
+    margin: 40px 0;
+  }
+  
+  .steps-wrapper {
+    position: relative;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  
+  .step-item {
+    flex: 1;
+    min-width: 100px;
+    position: relative;
+    z-index: 2;
+  }
+  
+  .step-number {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: var(--primary-color);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 15px;
+    font-weight: bold;
+  }
+  
+  .step-title {
+    font-weight: 500;
+    color: var(--text-dark);
+  }
+  
+  .step-connector {
+    height: 2px;
+    background-color: var(--primary-color);
+    flex-grow: 1;
+    margin: 20px 10px;
+    max-width: 80px;
+  }
+  
+  @media (max-width: 768px) {
+    .step-item {
+      margin-bottom: 30px;
+      width: 50%;
+    }
+  }
+  
+  @media (max-width: 576px) {
+    .step-item {
+      width: 100%;
+    }
+  }
+  
+  /* About section - based on image 3 */
+  .about-section {
+    background-color: var(--accent-subtle);
+    padding: 60px 0;
+    border-radius: 12px;
+    margin: 40px 0;
+  }
+  
+  .section-title {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 20px;
+  }
+  
+  .section-desc {
+    color: var(--text-muted);
+    font-size: 1.1rem;
+    line-height: 1.7;
+  }
+  
+  .feature-item {
+    padding: 20px;
+    transition: transform 0.3s ease;
+  }
+  
+  .feature-item:hover {
+    transform: translateY(-10px);
+  }
+  
+  .feature-icon-wrapper {
+    width: 80px;
+    height: 80px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+  
+  .feature-icon-wrapper.purple {
+    background-color: #f3e5ff;
+  }
+  
+  .feature-icon-wrapper.blue {
+    background-color: #e5f1ff;
+  }
+  
+  .feature-icon-wrapper.orange {
+    background-color: #fff0e5;
+  }
+  
+  .feature-title {
+    font-size: 1.4rem;
+    font-weight: 600;
+    margin-bottom: 15px;
+    color: var(--text-dark);
+  }
+  
+  .feature-description {
+    color: var(--text-muted);
+    line-height: 1.6;
+  }
+  
+  /* Service cards - from image 3 */
+  .service-card {
+    height: 100%;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    border: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  }
+  
+  .service-card .card-body {
+    padding: 30px;
+  }
+  
+  .service-card .card-title {
+    color: var(--text-dark);
+    font-size: 1.4rem;
+    font-weight: 600;
+    margin-bottom: 16px;
+  }
+  
+  .service-card .card-text {
+    color: var(--text-muted);
+    margin-bottom: 24px;
+    font-size: 1rem;
+  }
+  
+  .service-card .card-icon {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+    color: var(--primary-color);
+  }
+  
+  /* Feature sections - from image 3 */
+  .feature-section {
+    margin: 60px 0;
+  }
+  
+  /* Event cards */
+  .event-card {
+    height: 100%;
+  }
+  
+  .event-card .card-img-top {
+    height: 180px;
+    object-fit: cover;
+  }
+  
+  .event-card .card-title {
+    font-weight: 600;
+  }
+  
+  .event-card .event-date {
+    color: var(--text-muted);
+    font-weight: 500;
+    margin-bottom: 12px;
+  }
+  
+  .event-card .event-location {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+  }
+  
+  /* Resource section */
+  .resource-card {
+    height: 100%;
+  }
+  
+  .resource-card .badge {
+    font-weight: 500;
+    padding: 6px 10px;
+    margin-right: 6px;
+  }
+  
+  /* Appointment booking section */
+  .time-slot-card {
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .time-slot-card:hover {
+    background-color: var(--bg-subtle);
+  }
+  
+  .time-slot-card.selected {
+    background-color: var(--primary-color);
+    color: white;
+  }
+  
+  /* Calendar customization */
+  .fc-header-toolbar {
+    margin-bottom: 24px !important;
+  }
+  
+  .fc-button-primary {
+    background-color: var(--primary-color) !important;
+    border-color: var(--primary-color) !important;
+  }
+  
+  .fc-event {
+    border-radius: 4px;
+    padding: 4px;
+    font-weight: 500;
+  }
+  
+  /* Form styling */
+  .form-control:focus, .form-select:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(67, 97, 238, 0.25);
+  }
+  
+  /* Alert styling */
+  .alert {
+    border: none;
+    border-radius: 8px;
+  }
+  
+  .alert-info {
+    background-color: var(--bg-subtle);
+    color: var(--primary-dark);
+  }
+  
+  .alert-success {
+    background-color: rgba(76, 175, 80, 0.1);
+    color: var(--success-color);
+  }
+  
+  .alert-danger {
+    background-color: rgba(244, 67, 54, 0.1);
+    color: var(--danger-color);
+  }
+  
+  /* Badge styling */
+  .badge {
+    font-weight: 500;
+    padding: 6px 10px;
+    border-radius: 6px;
+  }
+  
+  /* Footer styling */
+  footer {
+    background-color: white !important;
+    color: var(--text-muted);
+    padding: 40px 0 20px;
+  }
+  
+  footer a {
+    color: var(--primary-color);
+    text-decoration: none;
+  }
+  
+  footer a:hover {
+    text-decoration: underline;
+  }
+  
+  /* Icon styling */
+  .fa, .fas, .far, .fab {
+    vertical-align: middle;
+  }
+  
+  /* Animations */
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  .animate-fadeIn {
+    animation: fadeIn 0.5s ease-out forwards;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .hero-section {
+      padding: 40px 0;
+    }
+    
+    .display-4 {
+      font-size: 2.5rem;
+    }
+    
+    .service-cards .col-md-4 {
+      margin-bottom: 20px;
+    }
+    
+    .event-cards .col-md-4 {
+      margin-bottom: 20px;
+    }
+  }
+  
+  /* Utilities */
+  .rounded-lg {
+    border-radius: 12px;
+  }
+  
+  .shadow-sm {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05) !important;
+  }
+  
+  .shadow-md {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
+  }
+  
+  /* Statistics cards */
+  .stat-card {
+    border-radius: 12px;
+    border: none;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  }
+  
+  .stat-card h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 0;
+  }
+  
+  .stat-card .card-title {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 1rem;
+    margin-bottom: 8px;
+  }
+  
+  /* Breadcrumb styling */
+  .breadcrumb {
+    background-color: transparent;
+    padding: 0.75rem 0;
+  }
+  
+  .breadcrumb-item a {
+    color: var(--primary-color);
+    text-decoration: none;
+  }
+  
+  .breadcrumb-item.active {
+    color: var(--text-muted);
+  }
+  
+  /* Profile sections */
+  .profile-header {
+    background-color: var(--bg-subtle);
+    border-radius: 12px;
+    padding: 30px;
+    margin-bottom: 30px;
+  }
+  
+  .profile-avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background-color: var(--primary-color);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+  }
+  
+  /* Table styling */
+  .table {
+    border-collapse: separate;
+    border-spacing: 0;
+  }
+  
+  .table thead th {
+    border-bottom: 2px solid rgba(0, 0, 0, 0.05);
+    font-weight: 600;
+    color: var(--text-muted);
+  }
+  
+  .table-hover tbody tr:hover {
+    background-color: var(--bg-subtle);
+  }
+  
+  /* Buttons with icons */
+  .btn-icon {
+    display: inline-flex;
+    align-items: center;
+  }
+  
+  .btn-icon i, .btn-icon svg {
+    margin-right: 8px;
+  }
+  
+  /* Custom progress indicator */
+  .progress-steps {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 30px;
+  }
+  
+  .step {
+    flex: 1;
+    text-align: center;
+    position: relative;
+  }
+  
+  .step::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 2px;
+    background-color: rgba(0, 0, 0, 0.1);
+    top: 15px;
+    left: 50%;
+    z-index: -1;
+  }
+  
+  .step:last-child::after {
+    display: none;
+  }
+  
+  .step-icon {
+    width: 30px;
+    height: 30px;
+    background-color: white;
+    border: 2px solid rgba(0, 0, 0, 0.1);
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+    z-index: 1;
+    position: relative;
+  }
+  
+  .step.active .step-icon {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    color: white;
+  }
+  
+  .step.completed .step-icon {
+    background-color: var(--success-color);
+    border-color: var(--success-color);
+    color: white;
+  }
+  
+  /* Custom blockquote for testimonials */
+  blockquote.testimonial {
+    border-left: 4px solid var(--primary-color);
+    padding-left: 20px;
+    font-style: italic;
+    color: var(--text-muted);
+  }
+  
+  blockquote.testimonial footer {
+    margin-top: 10px;
+    font-style: normal;
+    color: var(--text-dark);
+  }
+  
+  /* Image effects */
+  .img-hover-zoom {
+    overflow: hidden;
+    border-radius: 12px;
+  }
+  
+  .img-hover-zoom img {
+    transition: transform 0.5s ease;
+  }
+  
+  .img-hover-zoom:hover img {
+    transform: scale(1.05);
+  }
+  
+  /* Page transitions */
+  .page-transition {
+    animation: fadeIn 0.5s ease-out;
+  }
+  
+  /* Soft UI elements */
+  .soft-shadow {
+    box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.03),
+                -6px -6px 12px rgba(255, 255, 255, 0.8);
+  }
+  
+  .soft-bg {
+    background-color: #f0f4f8;
+  }
 
-/* Custom styles can be added here based on your Figma design */
+  

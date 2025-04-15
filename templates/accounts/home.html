@@ -2,90 +2,239 @@
 
 {% block title %}Home - UCA Mental Health Services{% endblock %}
 
-{% block content %}
-<div class="row">
-    <div class="col-md-8 offset-md-2 text-center">
-        <h1 class="display-4 mb-4">UCA Mental Health Services</h1>
-        <p class="lead">Supporting the mental health and well-being of the University of Central Asia community.</p>
-        <hr class="my-4">
-        <p>Schedule appointments with mental health professionals, access resources, and participate in our anonymous forum.</p>
-        <div class="mt-4">
-            {% if user.is_authenticated %}
-            <a href="{% url 'appointments:my_appointments' %}" class="btn btn-primary btn-lg me-2">Schedule an Appointment</a>
-            {% else %}
-            <a href="{% url 'account_login' %}" class="btn btn-primary btn-lg me-2">Login to Schedule</a>
-            {% endif %}
-            <a href="{% url 'resources:resource_list' %}" class="btn btn-secondary btn-lg">Browse Resources</a>
-        </div>
-    </div>
-</div>
+{% block extra_css %}
+<style>
+    .feature-icon-wrapper {
+        width: 80px;
+        height: 80px;
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .process-steps-section {
+        background-color: #e6f7ff;
+        border-radius: 12px;
+        padding: 40px 0;
+        margin: 40px 0;
+    }
+    
+    .steps-wrapper {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        max-width: 900px;
+        margin: 0 auto;
+        position: relative;
+    }
+    
+    .step-item {
+        flex: 1;
+        min-width: 100px;
+        text-align: center;
+        position: relative;
+        z-index: 2;
+    }
+    
+    .step-number {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background-color: #1a97d4;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 15px;
+        font-weight: bold;
+    }
+    
+    .step-title {
+        font-weight: 500;
+        color: #333;
+    }
+    
+    .step-connector {
+        height: 2px;
+        background-color: #1a97d4;
+        flex-grow: 1;
+        margin: 20px 10px;
+        max-width: 80px;
+    }
+    
+    .hero-section {
+        text-align: center;
+        padding: 60px 0 30px;
+    }
+    
+    .hero-section h1 {
+        font-size: 3rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .hero-section h1 .highlight {
+        color: #1a97d4;
+    }
+    
+    .btn-login {
+        border-radius: 30px;
+        padding: 12px 30px;
+        border: 2px solid #1a97d4;
+        color: #1a97d4;
+        display: inline-flex;
+        align-items: center;
+        font-weight: 600;
+        transition: all 0.3s;
+    }
+    
+    .btn-login:hover {
+        background-color: #1a97d4;
+        color: white;
+        transform: translateY(-2px);
+    }
+    
+    .btn-login i {
+        margin-left: 8px;
+    }
+    
+    .service-card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .service-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    }
+</style>
+{% endblock %}
 
-<div class="row mt-5">
-    <div class="col-md-4">
-        <div class="card">
-            <div class="card-body">
-                <h5 class="card-title">Appointments</h5>
-                <p class="card-text">Schedule appointments with mental health professionals at your convenience.</p>
-                <a href="{% url 'appointments:booking_calendar' %}" class="btn btn-primary">Book Now</a>
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-10 text-center">
+                <h1>UCA <span class="highlight">Mental Health</span> Services</h1>
+                <p class="lead">Supporting the mental health and well-being of the University of Central Asia community.</p>
+                
+                <p class="my-4">Schedule appointments with mental health professionals, access resources.</p>
+                
+                <div class="mt-4">
+                    {% if user.is_authenticated %}
+                    <a href="{% url 'appointments:booking_calendar' %}" class="btn btn-login">
+                        Login to Schedule <i class="fas fa-arrow-right"></i>
+                    </a>
+                    {% else %}
+                    <a href="{% url 'account_login' %}" class="btn btn-login">
+                        Login to Schedule <i class="fas fa-arrow-right"></i>
+                    </a>
+                    {% endif %}
+                </div>
             </div>
         </div>
     </div>
-    <div class="col-md-4">
-        <div class="card">
-            <div class="card-body">
-                <h5 class="card-title">Resources</h5>
-                <p class="card-text">Access a variety of mental health resources and educational materials.</p>
-                <a href="{% url 'resources:resource_list' %}" class="btn btn-primary">Browse Resources</a>
+</section>
+
+<!-- Process Steps -->
+<section class="process-steps-section">
+    <div class="container">
+        <div class="steps-wrapper">
+            <div class="step-item">
+                <div class="step-number">01</div>
+                <div class="step-title">Create an account</div>
+            </div>
+            <div class="step-connector d-none d-md-block"></div>
+            <div class="step-item">
+                <div class="step-number">02</div>
+                <div class="step-title">Book a Session</div>
+            </div>
+            <div class="step-connector d-none d-md-block"></div>
+            <div class="step-item">
+                <div class="step-number">03</div>
+                <div class="step-title">Get Confirmation</div>
+            </div>
+            <div class="step-connector d-none d-md-block"></div>
+            <div class="step-item">
+                <div class="step-number">04</div>
+                <div class="step-title">Go to Session</div>
+            </div>
+            <div class="step-connector d-none d-md-block"></div>
+            <div class="step-item">
+                <div class="step-number">05</div>
+                <div class="step-title">Stay Connected</div>
             </div>
         </div>
     </div>
-    <div class="col-md-4">
-        <div class="card">
-            <div class="card-body">
-                <h5 class="card-title">Events</h5>
-                <p class="card-text">Attend workshops, seminars, and other mental health events.</p>
-                <a href="{% url 'news:event_list' %}" class="btn btn-primary">View Events</a>
+</section>
+
+<!-- Services Section -->
+<div class="container py-5">
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card service-card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Appointments</h5>
+                    <p class="card-text">Schedule appointments with mental health professionals at your convenience.</p>
+                    <a href="{% url 'appointments:booking_calendar' %}" class="btn btn-primary">Book Now</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card service-card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Resources</h5>
+                    <p class="card-text">Access a variety of mental health resources and educational materials.</p>
+                    <a href="{% url 'resources:resource_list' %}" class="btn btn-primary">Browse Resources</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card service-card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Events</h5>
+                    <p class="card-text">Attend workshops, seminars, and other mental health events.</p>
+                    <a href="{% url 'news:event_list' %}" class="btn btn-primary">View Events</a>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
 {% if upcoming_events %}
-<div class="row mt-5">
-    <div class="col-md-12">
-        <h2 class="mb-4">Upcoming Events</h2>
-        <div class="row row-cols-1 row-cols-md-3 g-4">
-            {% for event in upcoming_events %}
-            <div class="col">
-                <div class="card h-100 shadow-sm">
-                    {% if event.image %}
-                    <img src="{{ event.image.url }}" class="card-img-top" alt="{{ event.title }}" style="height: 180px; object-fit: cover;">
-                    {% else %}
-                    <div class="card-img-top bg-light text-center py-5">
-                        <i class="fa fa-calendar fa-4x text-muted"></i>
-                    </div>
-                    {% endif %}
-                    <div class="card-body">
-                        <h5 class="card-title">{{ event.title }}</h5>
-                        <p class="card-text text-muted">
-                            <small>
-                                <i class="fa fa-calendar-check"></i> {{ event.event_date|date:"F d, Y" }}<br>
-                                <i class="fa fa-clock"></i> {{ event.event_date|time:"g:i A" }}<br>
-                                <i class="fa fa-map-marker-alt"></i> {{ event.location }}
-                            </small>
-                        </p>
-                        <p class="card-text">{{ event.description|truncatechars:100 }}</p>
-                    </div>
-                    <div class="card-footer bg-white border-top-0">
-                        <a href="{% url 'news:event_detail' event.slug %}" class="btn btn-outline-primary w-100">View Details</a>
-                    </div>
+<div class="container py-5">
+    <h2 class="mb-4">Upcoming Events</h2>
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        {% for event in upcoming_events %}
+        <div class="col">
+            <div class="card h-100 shadow-sm">
+                {% if event.image %}
+                <img src="{{ event.image.url }}" class="card-img-top" alt="{{ event.title }}" style="height: 180px; object-fit: cover;">
+                {% else %}
+                <div class="card-img-top bg-light text-center py-5">
+                    <i class="fa fa-calendar fa-4x text-muted"></i>
+                </div>
+                {% endif %}
+                <div class="card-body">
+                    <h5 class="card-title">{{ event.title }}</h5>
+                    <p class="card-text text-muted">
+                        <small>
+                            <i class="fa fa-calendar-check"></i> {{ event.event_date|date:"F d, Y" }}<br>
+                            <i class="fa fa-clock"></i> {{ event.event_date|time:"g:i A" }}<br>
+                            <i class="fa fa-map-marker-alt"></i> {{ event.location }}
+                        </small>
+                    </p>
+                    <p class="card-text">{{ event.description|truncatechars:100 }}</p>
+                </div>
+                <div class="card-footer bg-white border-top-0">
+                    <a href="{% url 'news:event_detail' event.slug %}" class="btn btn-outline-primary w-100">View Details</a>
                 </div>
             </div>
-            {% endfor %}
         </div>
-        <div class="text-center mt-4">
-            <a href="{% url 'news:event_list' %}" class="btn btn-outline-primary">View All Events</a>
-        </div>
+        {% endfor %}
+    </div>
+    <div class="text-center mt-4">
+        <a href="{% url 'news:event_list' %}" class="btn btn-outline-primary">View All Events</a>
     </div>
 </div>
 {% endif %}
