@@ -18,7 +18,8 @@
                     {% if user.phone_number %}
                     <p><strong>Phone:</strong> {{ user.phone_number }}</p>
                     {% endif %}
-                    <a href="#" class="btn btn-outline-primary">Edit Profile</a>
+                    <!-- Find the Edit Profile button in profile.html and replace it with this line -->
+<a href="{% url 'accounts:edit_profile' %}" class="btn btn-outline-primary">Edit Profile</a>
                 </div>
             </div>
         </div>

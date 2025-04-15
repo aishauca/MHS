@@ -7,5 +7,6 @@ urlpatterns = [
     path('', views.home, name='home'),
     path('profile/', views.profile, name='profile'),
     path('counselor-dashboard/', views.counselor_dashboard, name='counselor_dashboard'),
+    path('profile/edit/', views.edit_profile, name='edit_profile'),
     # More URL patterns will be added later
 ]

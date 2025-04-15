@@ -4,7 +4,7 @@ from django.http import HttpResponseForbidden
 from functools import wraps
 from appointments.models import Appointment
 from django.utils import timezone
-
+from .forms import UserProfileForm
 
 def user_type_required(allowed_types):
     def decorator(view_func):
@@ -113,4 +113,23 @@ def counselor_dashboard(request):
     context = {
         'appointments': appointments,
     }
-    return render(request, 'accounts/counselor_dashboard.html', context)
+    return render(request, 'accounts/counselor_dashboard.html', context) 
+
+# accounts/views.py
+# Add this import
+
+@login_required
+def edit_profile(request):
+    if request.method == 'POST':
+        form = UserProfileForm(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Your profile has been updated successfully!')
+            return redirect('accounts:profile')
+    else:
+        form = UserProfileForm(instance=request.user)
+    
+    context = {
+        'form': form,
+    }
+    return render(request, 'accounts/edit_profile.html', context)
