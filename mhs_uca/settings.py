@@ -16,7 +16,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Quick-start development settings - unsuitable for production
 SECRET_KEY = os.getenv("SECRET_KEY", "django-insecure-k2#jtw_oep=qt)!^(&rag)sl3_76=!xt1mm#l1-^_qeq+9c-+k")
-DEBUG = True
+DEBUG = False
 ALLOWED_HOSTS = ["*"]
 
 # Application definition
@@ -162,7 +162,7 @@ else:
 if not DEBUG:
     # Get CSRF trusted origins from environment and clean them
     # raw_origins = os.getenv("CSRF_TRUSTED_ORIGINS", "")
-    CSRF_TRUSTED_ORIGINS = ['https://ucamhs.org', 'https://web-production-9f134.up.railway.app']
+    CSRF_TRUSTED_ORIGINS = ['https://ucamhs.org', 'https://web-production-9f134.up.railway.app','http://localhost:8000', 'http://127.0.0.1:8000', ]
     
     # CSRF_COOKIE_DOMAIN = ".ucamhs.org"
 
