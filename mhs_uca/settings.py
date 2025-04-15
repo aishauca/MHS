@@ -224,6 +224,7 @@ if not DEBUG:
     CSRF_TRUSTED_ORIGINS = [
         "https://ucamhs.org",
         "https://www.ucamhs.org",  # Add this too if you support www
+        'https://railway.com',
     ]
     CSRF_COOKIE_DOMAIN = ".ucamhs.org"
 
