@@ -25,6 +25,13 @@ class CustomSignupForm(SignupForm):
             raise forms.ValidationError(
                 "Please use your UCA email address (@ucentralasia.org) to register."
             )
+        
+        # Add this check for email uniqueness
+        if User.objects.filter(email=email).exists():
+            raise forms.ValidationError(
+                "This email address is already in use. Please use a different email or login to your existing account."
+            )
+            
         return email
     
     def save(self, request):
@@ -33,9 +40,6 @@ class CustomSignupForm(SignupForm):
         user.phone_number = self.cleaned_data['phone_number']
         user.save()
         return user
-
-# accounts/forms.py
-# Add this class to the existing file
 
 class UserProfileForm(forms.ModelForm):
     class Meta:
