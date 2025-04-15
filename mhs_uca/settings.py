@@ -220,10 +220,17 @@ else:
 # Security settings for production
 if not DEBUG:
     # HTTPS settings
+    
+    CSRF_TRUSTED_ORIGINS = [
+    "https://ucamhs.org",
+    "https://www.ucamhs.org",  # Add this too if you support www
+]
+   CSRF_COOKIE_DOMAIN = ".ucamhs.org"
+
     CSRF_COOKIE_SECURE = True
     SESSION_COOKIE_SECURE = True
-    # SECURE_SSL_REDIRECT = os.getenv('SECURE_SSL_REDIRECT', 'True') == 'True'
-    SECURE_SSL_REDIRECT = False
+    SECURE_SSL_REDIRECT = os.getenv('SECURE_SSL_REDIRECT', 'True') == 'True'
+    # SECURE_SSL_REDIRECT = False
     SECURE_HSTS_SECONDS = 31536000  # 1 year
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
     SECURE_HSTS_PRELOAD = True
