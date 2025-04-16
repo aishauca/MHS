@@ -39,6 +39,7 @@ body {
   background-color: #f9fbfd;
   background-image: var(--pattern-dots);
   overflow-x: hidden;
+  visibility: hidden;
 }
 
 footer {

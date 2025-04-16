@@ -23,6 +23,12 @@
 {% block extra_js %}
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+        // Make sure FullCalendar is available
+        if (typeof FullCalendar === 'undefined') {
+            console.error('FullCalendar not loaded properly');
+            return;
+        }
+        
         var calendarEl = document.getElementById('calendar');
         var calendar = new FullCalendar.Calendar(calendarEl, {
             initialView: 'timeGridWeek',

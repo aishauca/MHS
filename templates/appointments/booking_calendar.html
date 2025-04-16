@@ -122,55 +122,40 @@
 
 {% block extra_js %}
 <script>
-    // document.addEventListener('DOMContentLoaded', function() {
-    //     var calendarEl = document.getElementById('calendar');
-    //     var calendar = new FullCalendar.Calendar(calendarEl, {
-    //         initialView: 'timeGridWeek',
-    //         headerToolbar: {
-    //             left: 'prev,next today',
-    //             center: 'title',
-    //             right: 'dayGridMonth,timeGridWeek,timeGridDay'
-    //         },
-    //         slotMinTime: '09:00:00',
-    //         slotMaxTime: '18:00:00',
-    //         slotDuration: '01:00:00', // 1-hour slots
-    //         height: 'auto',
-    //         allDaySlot: false,
-    //         height: 'auto',
-    //         eventTimeFormat: {
-    //             hour: '2-digit',
-    //             minute: '2-digit',
-    //             meridiem: 'short'
-    //         },
-
     document.addEventListener('DOMContentLoaded', function() {
-    var calendarEl = document.getElementById('calendar');
-    var calendar = new FullCalendar.Calendar(calendarEl, {
-        initialView: window.innerWidth < 768 ? 'timeGridDay' : 'timeGridWeek',
-        headerToolbar: {
-            left: 'prev,next today',
-            center: 'title',
-            right: 'dayGridMonth,timeGridWeek,timeGridDay'
-        },
-        slotMinTime: '09:00:00',
-        slotMaxTime: '18:00:00',
-        slotDuration: '01:00:00', // 1-hour slots
-        height: 'auto',
-        allDaySlot: false,
-        eventTimeFormat: {
+        // Make sure FullCalendar is available
+        if (typeof FullCalendar === 'undefined') {
+            console.error('FullCalendar not loaded properly');
+            return;
+        }
+        
+        var calendarEl = document.getElementById('calendar');
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: window.innerWidth < 768 ? 'timeGridDay' : 'timeGridWeek',
+            headerToolbar: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'dayGridMonth,timeGridWeek,timeGridDay'
+            },
+            slotMinTime: '09:00:00',
+            slotMaxTime: '18:00:00',
+            slotDuration: '01:00:00', // 1-hour slots
+            height: 'auto',
+            allDaySlot: false,
+            eventTimeFormat: {
                 hour: '2-digit',
                 minute: '2-digit',
                 meridiem: 'short'
             },
-            
-        events: '{% url "appointments:get_available_slots" %}',
-        eventClick: function(info) {
-            // Don't allow booking of slots the user already booked
-            if (info.event.classNames && info.event.classNames.includes('user-booked')) {
-                // Maybe show a message that this is already booked
-                alert('You already have this appointment booked');
-                return;
-            }
+                
+            events: '{% url "appointments:get_available_slots" %}',
+            eventClick: function(info) {
+                // Don't allow booking of slots the user already booked
+                if (info.event.classNames && info.event.classNames.includes('user-booked')) {
+                    // Maybe show a message that this is already booked
+                    alert('You already have this appointment booked');
+                    return;
+                }
 
                 // Show booking modal
                 var slot = info.event;
@@ -200,14 +185,15 @@
         
         calendar.render();
 
-         // Handle window resize for responsive views
-         window.addEventListener('resize', function() {
+        // Handle window resize for responsive views
+        window.addEventListener('resize', function() {
             if (window.innerWidth < 768) {
                 calendar.changeView('timeGridDay');
             } else {
                 calendar.changeView('timeGridWeek');
             }
         });
+        
 
         
         // Filter button functionality

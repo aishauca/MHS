@@ -21,6 +21,22 @@
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     
+    <style>
+        /* Page transition styling */
+        body {
+            visibility: visible; /* Set to visible by default for non-JS users */
+        }
+        
+        main {
+            opacity: 1;
+            transition: opacity 0.3s ease-in-out;
+        }
+        
+        .page-transition-active main {
+            opacity: 0;
+        }
+    </style>
+    
     {% block extra_css %}{% endblock %}
 </head>
 <body>
@@ -144,13 +160,91 @@
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     
-    <!-- FullCalendar JS -->
+    <!-- FullCalendar Core -->
+    <script>
+        // Define a global variable to track if FullCalendar is loaded
+        window.fullCalendarLoaded = false;
+    </script>
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js'></script>
-    <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/timegrid@5.11.3/main.min.js'></script>
+    <script>
+        // Mark FullCalendar as loaded and expose it globally if needed
+        window.fullCalendarLoaded = true;
+        if (typeof FullCalendar === 'undefined' && typeof window.FullCalendar !== 'undefined') {
+            window.FullCalendar = window.FullCalendar;
+        }
+    </script>
     
     <!-- Custom JS -->
     <script src="{% static 'js/main.js' %}"></script>
     
+    <!-- For templates that need module scripts -->
     {% block extra_js %}{% endblock %}
+    
+    <!-- Page transition and error handling script -->
+    <script>
+        // Smooth page transitions
+        document.addEventListener('DOMContentLoaded', function() {
+            // Remove transition class after page load
+            document.body.classList.remove('page-transition-active');
+            
+            // Add transition class on link clicks for internal links
+            document.querySelectorAll('a').forEach(link => {
+                if (link.hostname === window.location.hostname && !link.hasAttribute('data-no-transition')) {
+                    link.addEventListener('click', function(e) {
+                        // Don't add transition for links that should open in new tabs/windows
+                        if (this.target === '_blank' || e.ctrlKey || e.metaKey) return;
+                        
+                        // Don't transition for dropdown toggles and other special elements
+                        if (this.classList.contains('dropdown-toggle') || 
+                            this.getAttribute('href').startsWith('#')) return;
+                        
+                        document.body.classList.add('page-transition-active');
+                    });
+                }
+            });
+            
+            // Fallback: Ensure FullCalendar is globally available if it exists
+            if (window.fullCalendarLoaded && typeof FullCalendar === 'undefined') {
+                console.warn('FullCalendar loaded but not globally available. Attempting to fix...');
+                try {
+                    // Attempt to access potential hidden FullCalendar global
+                    if (typeof window.FullCalendar !== 'undefined') {
+                        window.FullCalendar = window.FullCalendar;
+                    }
+                } catch (e) {
+                    console.error('Could not expose FullCalendar globally:', e);
+                }
+            }
+        });
+        
+        // Error catching and recovery
+        window.addEventListener('error', function(e) {
+            // Check for FullCalendar errors
+            if (e.message && e.message.includes('FullCalendar is not defined')) {
+                console.warn('FullCalendar not defined error caught. Trying to recover...');
+                
+                // Try to reload FullCalendar
+                if (!window.fullCalendarRecoveryAttempted) {
+                    window.fullCalendarRecoveryAttempted = true;
+                    
+                    var script = document.createElement('script');
+                    script.src = 'https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.js';
+                    script.onload = function() {
+                        console.log('FullCalendar recovery attempt completed');
+                        if (typeof window.FullCalendar !== 'undefined') {
+                            // Force reload the page to apply the fixed FullCalendar
+                            window.location.reload();
+                        }
+                    };
+                    document.body.appendChild(script);
+                }
+            }
+            
+            // Check for import statement errors
+            if (e.message && e.message.includes('Cannot use import statement outside a module')) {
+                console.warn('Import statement error caught. Some features may not work correctly.');
+            }
+        });
+    </script>
 </body>
 </html>
