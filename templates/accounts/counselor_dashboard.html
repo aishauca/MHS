@@ -6,114 +6,129 @@
 <div class="container">
     <h1 class="mb-4">Counselor Dashboard</h1>
     
-    <!-- Stats Cards
-    <div class="row mb-4">
-        <div class="col-md-4">
-            <div class="card text-white bg-primary">
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 mb-5">
+        <!-- Time Slot Management Card -->
+        <div class="col">
+            <div class="card dashboard-card h-100">
                 <div class="card-body">
-                    <h5 class="card-title">Total Appointments</h5>
-                    <h2>{{ total_appointments }}</h2>
+                    <div class="card-icon">
+                        <i class="fas fa-calendar-alt"></i>
+                    </div>
+                    <h4 class="card-title">Manage Availability</h4>
+                    <p class="card-text">Set your available time slots for students to book appointments.</p>
+                    <div class="mt-4">
+                        <a href="{% url 'appointments:counselor_calendar' %}" class="btn btn-primary">
+                            <i class="fas fa-calendar me-2"></i>Calendar View
+                        </a>
+                        <a href="{% url 'appointments:add_time_slot' %}" class="btn btn-outline-primary mt-2">
+                            <i class="fas fa-plus me-2"></i>Add Time Slot
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="col-md-4">
-            <div class="card text-white bg-success">
+        
+        <!-- Appointments Management Card -->
+        <div class="col">
+            <div class="card dashboard-card h-100">
                 <div class="card-body">
-                    <h5 class="card-title">Completed</h5>
-                    <h2>{{ completed_appointments }}</h2>
+                    <div class="card-icon">
+                        <i class="fas fa-clipboard-list"></i>
+                    </div>
+                    <h4 class="card-title">My Appointments</h4>
+                    <p class="card-text">View and manage your scheduled appointments with students.</p>
+                    <div class="mt-4">
+                        <a href="{% url 'appointments:counselor_appointments_list' %}" class="btn btn-primary">
+                            <i class="fas fa-list me-2"></i>View Appointments
+                        </a>
+                        <a href="{% url 'appointments:my_appointments' %}" class="btn btn-outline-primary mt-2">
+                            <i class="fas fa-history me-2"></i>Appointment History
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="col-md-4">
-            <div class="card text-white bg-danger">
+        
+        <!-- Resources Management Card -->
+        <div class="col">
+            <div class="card dashboard-card h-100">
                 <div class="card-body">
-                    <h5 class="card-title">Cancelled</h5>
-                    <h2>{{ cancelled_appointments }}</h2>
+                    <div class="card-icon">
+                        <i class="fas fa-book-medical"></i>
+                    </div>
+                    <h4 class="card-title">Manage Resources</h4>
+                    <p class="card-text">Add and manage mental health resources for students.</p>
+                    <div class="mt-4">
+                        <a href="{% url 'resources:resource_list' %}" class="btn btn-primary">
+                            <i class="fas fa-list me-2"></i>View Resources
+                        </a>
+                        <a href="{% url 'resources:add_resource' %}" class="btn btn-outline-primary mt-2">
+                            <i class="fas fa-plus me-2"></i>Add Resource
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
-    </div> -->
-    
-    
-    
-    
-
-<!-- Time Slot Management -->
-<div class="card mb-4">
-    <div class="card-header bg-info text-white">
-        <h3 class="card-title mb-0">Manage Your Availability</h3>
-    </div>
-    <div class="card-body">
-        <p>Set your available time slots for students to book appointments.</p>
-        <a href="{% url 'appointments:manage_time_slots' %}" class="btn btn-primary">Manage Time Slots</a>
-        <a href="{% url 'appointments:add_time_slot' %}" class="btn btn-success">Add New Time Slot</a>
-        <a href="{% url 'appointments:counselor_calendar' %}" class="btn btn-primary">Manage Availability Calendar</a>
+        
+        <!-- Categories Management Card -->
+        <div class="col">
+            <div class="card dashboard-card h-100">
+                <div class="card-body">
+                    <div class="card-icon">
+                        <i class="fas fa-folder-open"></i>
+                    </div>
+                    <h4 class="card-title">Resource Categories</h4>
+                    <p class="card-text">Organize resources by managing categories.</p>
+                    <div class="mt-4">
+                        <a href="{% url 'resources:category_list' %}" class="btn btn-primary">
+                            <i class="fas fa-th-list me-2"></i>View Categories
+                        </a>
+                        <a href="{% url 'resources:add_category' %}" class="btn btn-outline-primary mt-2">
+                            <i class="fas fa-folder-plus me-2"></i>Add Category
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Events Management Card -->
+        <div class="col">
+            <div class="card dashboard-card h-100">
+                <div class="card-body">
+                    <div class="card-icon">
+                        <i class="fas fa-calendar-week"></i>
+                    </div>
+                    <h4 class="card-title">Manage Events</h4>
+                    <p class="card-text">Create and manage mental health events and workshops.</p>
+                    <div class="mt-4">
+                        <a href="{% url 'news:event_list' %}" class="btn btn-primary">
+                            <i class="fas fa-list me-2"></i>View Events
+                        </a>
+                        <a href="{% url 'news:add_event' %}" class="btn btn-outline-primary mt-2">
+                            <i class="fas fa-plus me-2"></i>Add Event
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Event Registration Card -->
+        <div class="col">
+            <div class="card dashboard-card h-100">
+                <div class="card-body">
+                    <div class="card-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h4 class="card-title">Event Registrations</h4>
+                    <p class="card-text">View and manage participant registrations for events.</p>
+                    <div class="mt-4">
+                        <a href="{% url 'news:manage_events' %}" class="btn btn-primary">
+                            <i class="fas fa-cog me-2"></i>Manage All Events
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
-
-<!-- Resource Management -->
-<div class="card mb-4">
-    <div class="card-header bg-success text-white">
-        <h3 class="card-title mb-0">Manage Resources</h3>
-    </div>
-    <div class="card-body">
-        <p>Add and manage mental health resources for students.</p>
-        <div class="row">
-            <div class="col-md-6">
-                <div class="card mb-3">
-                    <div class="card-body">
-                        <h5 class="card-title">Resource Management</h5>
-                        <p>Add, edit, or delete mental health resources.</p>
-                        <a href="{% url 'resources:resource_list' %}" class="btn btn-primary">View All Resources</a>
-                        <a href="{% url 'resources:add_resource' %}" class="btn btn-success">Add New Resource</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="card mb-3">
-                    <div class="card-body">
-                        <h5 class="card-title">Category Management</h5>
-                        <p>Organize resources by managing categories.</p>
-                        <a href="{% url 'resources:category_list' %}" class="btn btn-primary">View Categories</a>
-                        <a href="{% url 'resources:add_category' %}" class="btn btn-success">Add New Category</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-<!-- Event Management -->
-<div class="card mb-4">
-    <div class="card-header bg-info text-white">
-        <h3 class="card-title mb-0">Manage Events</h3>
-    </div>
-    <div class="card-body">
-        <p>Create and manage mental health events and workshops for students.</p>
-        <div class="row">
-            <div class="col-md-6">
-                <div class="card mb-3">
-                    <div class="card-body">
-                        <h5 class="card-title">Event Management</h5>
-                        <p>Create, edit, or delete events and workshops.</p>
-                        <a href="{% url 'news:event_list' %}" class="btn btn-primary">View All Events</a>
-                        <a href="{% url 'news:add_event' %}" class="btn btn-success">Add New Event</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="card mb-3">
-                    <div class="card-body">
-                        <h5 class="card-title">Registration Management</h5>
-                        <p>View and manage event registrations.</p>
-                        <a href="{% url 'news:manage_events' %}" class="btn btn-primary">Manage All Events</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-
 {% endblock %}

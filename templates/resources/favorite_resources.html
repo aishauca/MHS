@@ -1,0 +1,135 @@
+{% extends 'base.html' %}
+
+{% block title %}My Favorite Resources - UCA Mental Health Services{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="mb-4">My Favorite Resources</h1>
+    
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'resources:resource_list' %}">Resources</a></li>
+            <li class="breadcrumb-item active" aria-current="page">My Favorites</li>
+        </ol>
+    </nav>
+    
+    <div class="card">
+        <div class="card-header bg-primary text-white">
+            <h5 class="card-title mb-0">
+                <i class="fas fa-heart me-2"></i>Favorites
+            </h5>
+        </div>
+        <div class="card-body">
+            {% if favorites %}
+                <div class="card-grid">
+                    {% for favorite in favorites %}
+                    <div class="card resource-card h-100">
+                        <div class="pattern-bg">
+                            {% if favorite.resource.resource_type == 'article' %}
+                                <i class="fas fa-file-alt fa-3x text-primary"></i>
+                            {% elif favorite.resource.resource_type == 'pdf' %}
+                                <i class="fas fa-file-pdf fa-3x text-primary"></i>
+                            {% elif favorite.resource.resource_type == 'video' %}
+                                <i class="fas fa-video fa-3x text-primary"></i>
+                            {% else %}
+                                <i class="fas fa-link fa-3x text-primary"></i>
+                            {% endif %}
+                        </div>
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <h5 class="card-title mb-0">{{ favorite.resource.title }}</h5>
+                                <span class="favorite-btn active" 
+                                      data-resource-id="{{ favorite.resource.id }}" 
+                                      title="Remove from favorites">
+                                    <i class="fas fa-heart"></i>
+                                </span>
+                            </div>
+                            <p class="card-text text-muted small mb-2">{{ favorite.resource.get_resource_type_display }}</p>
+                            <p class="card-text">{{ favorite.resource.description|truncatewords:15 }}</p>
+                            <div class="mt-auto">
+                                <a href="{% url 'resources:resource_detail' favorite.resource.slug %}" class="btn btn-primary btn-sm">View Details</a>
+                                
+                                {% if favorite.resource.file %}
+                                <a href="{{ favorite.resource.file.url }}" class="btn btn-outline-primary btn-sm" download>
+                                    <i class="fas fa-download me-1"></i>Download
+                                </a>
+                                {% elif favorite.resource.external_url %}
+                                <a href="{{ favorite.resource.external_url }}" class="btn btn-outline-primary btn-sm" target="_blank">
+                                    <i class="fas fa-external-link-alt me-1"></i>External Link
+                                </a>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="card-footer text-muted">
+                            Added to favorites: {{ favorite.created_at|date }}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="alert alert-info">
+                    <p>You haven't added any resources to your favorites yet.</p>
+                    <p>Browse the <a href="{% url 'resources:resource_list' %}">resources section</a> and click the heart icon to add resources to your favorites.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Handle favorite button clicks
+        const favoriteButtons = document.querySelectorAll('.favorite-btn');
+        
+        favoriteButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const resourceId = this.dataset.resourceId;
+                const card = this.closest('.card');
+                
+                // Send AJAX request to toggle favorite
+                fetch(`/resources/favorite/${resourceId}/`, {
+                    method: 'POST',
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'X-CSRFToken': getCookie('csrftoken')
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    // Remove card if unfavorited on the favorites page
+                    if (!data.is_favorite) {
+                        card.style.opacity = '0';
+                        setTimeout(() => {
+                            card.remove();
+                            
+                            // Check if there are no more favorites
+                            if (document.querySelectorAll('.resource-card').length === 0) {
+                                // Reload the page to show the "no favorites" message
+                                location.reload();
+                            }
+                        }, 300);
+                    }
+                });
+            });
+        });
+        
+        // Helper function to get CSRF token
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+    });
+</script>
+{% endblock %}
+{% endblock %}

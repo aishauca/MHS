@@ -11,6 +11,8 @@ urlpatterns = [
     path('categories/add/', views.add_category, name='add_category'),
     path('categories/edit/<int:category_id>/', views.edit_category, name='edit_category'),
     
+    path('favorite/<int:resource_id>/', views.toggle_favorite, name='toggle_favorite'),
+    path('favorites/', views.favorite_resources, name='favorite_resources'),
     # These should come after the more specific patterns
     path('', views.resource_list, name='resource_list'),
     path('categories/', views.category_list, name='category_list'),
@@ -18,4 +20,8 @@ urlpatterns = [
     
     # The catch-all slug pattern must be last
     path('<slug:slug>/', views.resource_detail, name='resource_detail'),
+
+
+    
+
 ]

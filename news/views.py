@@ -15,17 +15,44 @@ def is_counselor_or_admin(user):
 # Event views
 @login_required
 def event_list(request):
-    """View to list all events"""
-    upcoming_events = Event.objects.filter(event_date__gte=timezone.now()).order_by('event_date')
-    past_events = Event.objects.filter(event_date__lt=timezone.now()).order_by('-event_date')
+    """View to list all events with optional search"""
+    # Get search query if any
+    search_query = request.GET.get('search', '')
+    
+    if search_query:
+        # Search in title, description, and location
+        upcoming_events = Event.objects.filter(
+            Q(title__icontains=search_query) | 
+            Q(description__icontains=search_query) |
+            Q(location__icontains=search_query),
+            event_date__gte=timezone.now()
+        ).order_by('event_date')
+        
+        past_events = Event.objects.filter(
+            Q(title__icontains=search_query) | 
+            Q(description__icontains=search_query) |
+            Q(location__icontains=search_query),
+            event_date__lt=timezone.now()
+        ).order_by('-event_date')
+    else:
+        upcoming_events = Event.objects.filter(
+            event_date__gte=timezone.now()
+        ).order_by('event_date')
+        
+        past_events = Event.objects.filter(
+            event_date__lt=timezone.now()
+        ).order_by('-event_date')
     
     # For each event, check if the current user is registered
     for event in upcoming_events:
-        event.is_registered = EventRegistration.objects.filter(event=event, user=request.user).exists()
+        event.is_registered = EventRegistration.objects.filter(
+            event=event, user=request.user
+        ).exists() if request.user.is_authenticated else False
     
     context = {
         'upcoming_events': upcoming_events,
-        'past_events': past_events
+        'past_events': past_events,
+        'search_query': search_query
     }
     return render(request, 'news/event_list.html', context)
 

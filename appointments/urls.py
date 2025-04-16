@@ -15,6 +15,9 @@ urlpatterns = [
     path('counselor-calendar/', views.counselor_calendar, name='counselor_calendar'),
     path('booking-calendar/', views.booking_calendar, name='booking_calendar'),
     
+    # New appointment list view for counselors
+    path('counselor/list/', views.counselor_appointments_list, name='counselor_appointments_list'),
+    
     # New calendar-based booking functionality
     path('slot/<int:slot_id>/book/', views.create_appointment_from_slot, name='create_appointment_from_slot'),
     path('time-slots/add-multiple/', views.add_multiple_time_slots, name='add_multiple_slots'),

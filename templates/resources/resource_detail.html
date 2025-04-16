@@ -22,6 +22,11 @@
                     <div class="mb-4">
                         <span class="badge bg-secondary">{{ resource.get_resource_type_display }}</span>
                         <span class="badge bg-info">{{ resource.category.name }}</span>
+                        <span class="favorite-btn {% if is_favorite %}active{% endif %}" 
+                            data-resource-id="{{ resource.id }}"
+                            title="{% if is_favorite %}Remove from favorites{% else %}Add to favorites{% endif %}">
+                        <i class="fas fa-heart"></i>
+                        </span>
                     </div>
                     
                     <h5>Description</h5>

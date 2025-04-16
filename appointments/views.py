@@ -1,6 +1,6 @@
 import datetime
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
 from django.utils import timezone
 from django.http import JsonResponse
@@ -22,9 +22,6 @@ def view_appointment(request, appointment_id):
         'appointment': appointment,
     }
     return render(request, 'appointments/view_appointment.html', context)
-
-
-# In appointments/views.py, update the cancel_appointment view:
 
 @login_required
 def cancel_appointment(request, appointment_id):
@@ -66,41 +63,6 @@ def cancel_appointment(request, appointment_id):
     }
     return render(request, 'appointments/cancel_appointment.html', context)
 
-
-# @login_required
-# def cancel_appointment(request, appointment_id):
-#     """Allow users or counselors to cancel an appointment"""
-#     # Get the appointment, ensuring the user has permission
-#     if request.user.user_type == 'counselor':
-#         appointment = get_object_or_404(Appointment, id=appointment_id, counselor=request.user)
-#     else:
-#         appointment = get_object_or_404(Appointment, id=appointment_id, user=request.user)
-    
-#     if request.method == 'POST':
-#         appointment.status = 'cancelled'
-#         appointment.save()
-        
-#         # If there's a time slot linked to this appointment, mark it as available again
-#         try:
-#             time_slot = TimeSlot.objects.get(appointment=appointment)
-#             time_slot.is_booked = False
-#             time_slot.appointment = None
-#             time_slot.save()
-#         except TimeSlot.DoesNotExist:
-#             pass
-            
-#         messages.success(request, 'Appointment cancelled successfully.')
-        
-#         if request.user.user_type == 'counselor':
-#             return redirect('accounts:counselor_dashboard')
-#         else:
-#             return redirect('accounts:profile')
-    
-#     context = {
-#         'appointment': appointment,
-#     }
-#     return render(request, 'appointments/cancel_appointment.html', context)
-
 @login_required
 @user_type_required(['counselor'])
 def complete_appointment(request, appointment_id):
@@ -118,20 +80,14 @@ def complete_appointment(request, appointment_id):
     }
     return render(request, 'appointments/complete_appointment.html', context)
 
-# In appointments/views.py, update the my_appointments view:
-
 @login_required
 def my_appointments(request):
     """View all appointments for the logged-in user (serves as History)"""
     upcoming_appointments = Appointment.objects.filter(
         user=request.user,
         date_time__gte=timezone.now(),
+        status='scheduled'
     ).order_by('date_time')
-    
-    past_appointments = Appointment.objects.filter(
-        user=request.user,
-        date_time__lt=timezone.now(),
-    ).order_by('-date_time')
     
     completed_appointments = Appointment.objects.filter(
         user=request.user,
@@ -145,7 +101,6 @@ def my_appointments(request):
     
     context = {
         'upcoming_appointments': upcoming_appointments,
-        'past_appointments': past_appointments,
         'completed_appointments': completed_appointments,
         'cancelled_appointments': cancelled_appointments,
     }
@@ -200,7 +155,6 @@ def create_appointment_from_slot(request, slot_id):
     return render(request, 'appointments/create_appointment.html', context)
 
 # Counselor time slot management views
-
 @login_required
 @user_type_required(['counselor'])
 def counselor_calendar(request):
@@ -316,13 +270,22 @@ def get_counselor_slots(request, counselor_id=None):
 
 @login_required
 def get_available_slots(request):
-    """Return only available time slots in JSON format"""
+    """Return available time slots and user's own booked slots in JSON format"""
     # Get all available slots
-    slots = TimeSlot.objects.filter(is_booked=False, date__gte=timezone.now().date())
+    available_slots = TimeSlot.objects.filter(is_booked=False, date__gte=timezone.now().date())
+    
+    # Get slots booked by the current user
+    user_booked_slots = TimeSlot.objects.filter(
+        is_booked=True, 
+        appointment__user=request.user,
+        date__gte=timezone.now().date()
+    )
     
     # Format slots for FullCalendar
     data = []
-    for slot in slots:
+    
+    # Add available slots
+    for slot in available_slots:
         counselor_name = slot.counselor.get_full_name() or slot.counselor.username
         
         # Create datetime objects for start and end
@@ -338,4 +301,57 @@ def get_available_slots(request):
             'color': '#28a745',  # Green for available
         })
     
+    # Add user's booked slots
+    for slot in user_booked_slots:
+        counselor_name = slot.counselor.get_full_name() or slot.counselor.username
+        
+        # Create datetime objects for start and end
+        start_datetime = datetime.datetime.combine(slot.date, slot.start_time)
+        end_datetime = datetime.datetime.combine(slot.date, slot.end_time)
+        
+        # Format in ISO format for FullCalendar
+        data.append({
+            'id': slot.id,
+            'title': f'Booked by you with {counselor_name}',
+            'start': start_datetime.isoformat(),
+            'end': end_datetime.isoformat(),
+            'color': '#6abf69',  # Softer green for booked by you
+            'className': 'user-booked',
+        })
+    
     return JsonResponse(data, safe=False)
+
+@login_required
+@user_type_required(['counselor'])
+def counselor_appointments_list(request):
+    """View for counselors to see their appointments sorted by date"""
+    # Get current date
+    today = timezone.localdate()
+    tomorrow = today + timezone.timedelta(days=1)
+    
+    # Get today's appointments
+    today_appointments = Appointment.objects.filter(
+        counselor=request.user,
+        date_time__date=today
+    ).order_by('date_time')
+    
+    # Get tomorrow's appointments
+    tomorrow_appointments = Appointment.objects.filter(
+        counselor=request.user,
+        date_time__date=tomorrow
+    ).order_by('date_time')
+    
+    # Get future appointments beyond tomorrow
+    upcoming_appointments = Appointment.objects.filter(
+        counselor=request.user,
+        date_time__date__gt=tomorrow
+    ).order_by('date_time')
+    
+    context = {
+        'today_appointments': today_appointments,
+        'tomorrow_appointments': tomorrow_appointments,
+        'upcoming_appointments': upcoming_appointments,
+        'today': today,
+        'tomorrow': tomorrow
+    }
+    return render(request, 'appointments/counselor_appointments_list.html', context)

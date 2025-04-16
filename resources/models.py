@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils.text import slugify
+from accounts.models import User
 
 class ResourceCategory(models.Model):
     name = models.CharField(max_length=100)
@@ -37,3 +38,15 @@ class Resource(models.Model):
     
     def __str__(self):
         return self.title
+
+class ResourceFavorite(models.Model):
+    """Model to track user's favorite resources"""
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='favorite_resources')
+    resource = models.ForeignKey('Resource', on_delete=models.CASCADE, related_name='favorited_by')
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        unique_together = ['user', 'resource']
+        
+    def __str__(self):
+        return f"{self.user.username} - {self.resource.title}"

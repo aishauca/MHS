@@ -85,45 +85,46 @@
 
 {% block extra_js %}
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        var calendarEl = document.getElementById('calendar');
-        var calendar = new FullCalendar.Calendar(calendarEl, {
-            initialView: 'timeGridWeek',
-            headerToolbar: {
-                left: 'prev,next today',
-                center: 'title',
-                right: 'dayGridMonth,timeGridWeek,timeGridDay'
-            },
-            slotMinTime: '09:00:00',
-            slotMaxTime: '18:00:00',
-            allDaySlot: false,
-            slotDuration: '01:00:00',
-            events: '{% url "appointments:get_own_slots" %}',
-            eventClick: function(info) {
-                // Don't allow editing of booked slots
-                if (info.event.title === 'Booked') {
-                    return;
-                }
-                
-                // Show delete modal for available slots
-                var startDate = new Date(info.event.start);
-                var endDate = new Date(info.event.end);
-                
-                document.getElementById('slotDate').textContent = startDate.toLocaleDateString();
-                document.getElementById('slotTime').textContent = 
-                    startDate.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'}) + 
-                    ' - ' + 
-                    endDate.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});
-                
-                document.getElementById('deleteSlotForm').action = 
-                    '{% url "appointments:delete_time_slot" 0 %}'.replace('0', info.event.id);
-                
-                var deleteModal = new bootstrap.Modal(document.getElementById('deleteSlotModal'));
-                deleteModal.show();
+   document.addEventListener('DOMContentLoaded', function() {
+    var calendarEl = document.getElementById('calendar');
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'timeGridWeek',
+        headerToolbar: {
+            left: 'prev,next today',
+            center: 'title',
+            right: 'dayGridMonth,timeGridWeek,timeGridDay'
+        },
+        slotMinTime: '09:00:00',
+        slotMaxTime: '18:00:00',
+        slotDuration: '01:00:00', // 1-hour slots
+        height: 'auto',
+        allDaySlot: false,
+        events: '{% url "appointments:get_own_slots" %}',
+        eventClick: function(info) {
+            // Don't allow editing of booked slots
+            if (info.event.title === 'Booked') {
+                return;
             }
-        });
-        
-        calendar.render();
+            
+            // Show delete modal for available slots
+            var startDate = new Date(info.event.start);
+            var endDate = new Date(info.event.end);
+            
+            document.getElementById('slotDate').textContent = startDate.toLocaleDateString();
+            document.getElementById('slotTime').textContent = 
+                startDate.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'}) + 
+                ' - ' + 
+                endDate.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});
+            
+            document.getElementById('deleteSlotForm').action = 
+                '{% url "appointments:delete_time_slot" 0 %}'.replace('0', info.event.id);
+            
+            var deleteModal = new bootstrap.Modal(document.getElementById('deleteSlotModal'));
+            deleteModal.show();
+        }
     });
+    
+    calendar.render();
+});
 </script>
 {% endblock %}

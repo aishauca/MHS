@@ -8,49 +8,66 @@
         <h1>Mental Health Events</h1>
         {% if user.is_superuser or user.user_type == 'counselor' %}
         <div>
-            <a href="{% url 'news:add_event' %}" class="btn btn-primary">Add New Event</a>
-            <a href="{% url 'news:manage_events' %}" class="btn btn-outline-primary ms-2">Manage Events</a>
+            <a href="{% url 'news:add_event' %}" class="btn btn-primary">
+                <i class="fas fa-plus me-2"></i>Add New Event
+            </a>
+            <a href="{% url 'news:manage_events' %}" class="btn btn-outline-primary ms-2">
+                <i class="fas fa-cog me-2"></i>Manage Events
+            </a>
         </div>
         {% endif %}
+    </div>
+    
+    <!-- Search Form -->
+    <div class="search-form mb-4">
+        <form method="get" action="{% url 'news:event_list' %}">
+            <div class="input-group">
+                <span class="search-icon"><i class="fas fa-search"></i></span>
+                <input type="text" class="form-control" name="search" placeholder="Search events..." value="{{ search_query|default:'' }}">
+                <button class="btn btn-primary" type="submit">Search</button>
+            </div>
+        </form>
     </div>
 
     <!-- Upcoming Events Section -->
     <div class="card mb-4">
-        <div class="card-header bg-success text-white">
+        <div class="card-header bg-primary text-white">
             <h2 class="h4 mb-0">Upcoming Events</h2>
         </div>
         <div class="card-body">
             {% if upcoming_events %}
-                <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+                <div class="card-grid">
                     {% for event in upcoming_events %}
-                    <div class="col">
-                        <div class="card h-100 shadow-sm">
-                            {% if event.image %}
-                            <img src="{{ event.image.url }}" class="card-img-top" alt="{{ event.title }}">
-                            {% else %}
-                            <div class="card-img-top bg-light text-center py-5">
-                                <i class="fa fa-calendar fa-4x text-muted"></i>
+                    <div class="card event-card shadow-sm">
+                        <div class="pattern-bg">
+                            <i class="fas fa-calendar-alt fa-3x text-primary"></i>
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">{{ event.title }}</h5>
+                            <div class="event-meta">
+                                <i class="fas fa-calendar-check"></i>
+                                <span>{{ event.event_date|date:"F d, Y - g:i A" }}</span>
                             </div>
-                            {% endif %}
-                            <div class="card-body">
-                                <h5 class="card-title">{{ event.title }}</h5>
-                                <p class="card-text text-muted">
-                                    <i class="fa fa-calendar-check"></i> {{ event.event_date|date:"F d, Y - g:i A" }}<br>
-                                    <i class="fa fa-map-marker-alt"></i> {{ event.location }}
-                                </p>
-                                <p class="card-text">{{ event.description|truncatewords:20 }}</p>
+                            <div class="event-meta">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span>{{ event.location }}</span>
                             </div>
-                            <div class="card-footer bg-white border-top-0">
-                                <div class="d-grid gap-2">
-                                    <a href="{% url 'news:event_detail' event.slug %}" class="btn btn-outline-primary">View Details</a>
-                                    {% if event.registration_required %}
-                                        {% if event.is_registered %}
-                                            <a href="{% url 'news:unregister_from_event' event.id %}" class="btn btn-outline-danger">Cancel Registration</a>
-                                        {% else %}
-                                            <a href="{% url 'news:register_for_event' event.id %}" class="btn btn-success">Register</a>
-                                        {% endif %}
+                            <p class="card-text mt-3">{{ event.description|truncatewords:15 }}</p>
+                        </div>
+                        <div class="card-footer bg-white border-top-0">
+                            <div class="d-grid gap-2">
+                                <a href="{% url 'news:event_detail' event.slug %}" class="btn btn-outline-primary">View Details</a>
+                                {% if event.registration_required %}
+                                    {% if event.is_registered %}
+                                        <a href="{% url 'news:unregister_from_event' event.id %}" class="btn btn-outline-danger">
+                                            <i class="fas fa-times-circle me-2"></i>Cancel Registration
+                                        </a>
+                                    {% else %}
+                                        <a href="{% url 'news:register_for_event' event.id %}" class="btn btn-primary">
+                                            <i class="fas fa-check-circle me-2"></i>Register
+                                        </a>
                                     {% endif %}
-                                </div>
+                                {% endif %}
                             </div>
                         </div>
                     </div>
@@ -71,29 +88,27 @@
         </div>
         <div class="card-body">
             {% if past_events %}
-                <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+                <div class="card-grid">
                     {% for event in past_events %}
-                    <div class="col">
-                        <div class="card h-100 shadow-sm text-muted">
-                            {% if event.image %}
-                            <img src="{{ event.image.url }}" class="card-img-top opacity-50" alt="{{ event.title }}">
-                            {% else %}
-                            <div class="card-img-top bg-light text-center py-5">
-                                <i class="fa fa-calendar fa-4x text-muted"></i>
+                    <div class="card event-card shadow-sm text-muted">
+                        <div class="pattern-bg opacity-50">
+                            <i class="fas fa-calendar-check fa-3x text-secondary"></i>
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">{{ event.title }}</h5>
+                            <div class="event-meta">
+                                <i class="fas fa-calendar-check"></i>
+                                <span>{{ event.event_date|date:"F d, Y - g:i A" }}</span>
                             </div>
-                            {% endif %}
-                            <div class="card-body">
-                                <h5 class="card-title">{{ event.title }}</h5>
-                                <p class="card-text">
-                                    <i class="fa fa-calendar-check"></i> {{ event.event_date|date:"F d, Y - g:i A" }}<br>
-                                    <i class="fa fa-map-marker-alt"></i> {{ event.location }}
-                                </p>
-                                <p class="card-text">{{ event.description|truncatewords:15 }}</p>
-                                <div class="badge bg-secondary">Event Completed</div>
+                            <div class="event-meta">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span>{{ event.location }}</span>
                             </div>
-                            <div class="card-footer bg-white border-top-0">
-                                <a href="{% url 'news:event_detail' event.slug %}" class="btn btn-outline-secondary w-100">View Details</a>
-                            </div>
+                            <p class="card-text mt-3">{{ event.description|truncatewords:15 }}</p>
+                            <div class="badge bg-secondary">Event Completed</div>
+                        </div>
+                        <div class="card-footer bg-white border-top-0">
+                            <a href="{% url 'news:event_detail' event.slug %}" class="btn btn-outline-secondary w-100">View Details</a>
                         </div>
                     </div>
                     {% endfor %}
