@@ -1,2 +1,1 @@
-release: python manage.py migrate
-web: gunicorn mhs_uca.wsgi
+web: python manage.py migrate && gunicorn mhs_uca.wsgi
