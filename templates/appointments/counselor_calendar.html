@@ -149,6 +149,54 @@
 .fc-timeGridDay-view .fc-event-time {
   display: inline-block !important;
 }
+
+
+.fc-timeGridWeek-view .fc-event-time,
+.fc-dayGridMonth-view .fc-event-time {
+  display: none !important;
+}
+
+/* Center the "Booked" or "Available" text in week view */
+.fc-timeGridWeek-view .fc-event-title,
+.fc-dayGridMonth-view .fc-event-title {
+  display: block !important;
+  text-align: center !important;
+  font-size: 16px !important;
+  font-weight: 600 !important;
+  margin: 0 auto !important;
+  padding: 5px 0 !important;
+}
+
+/* Make sure vertical alignment is centered */
+.fc-timeGridWeek-view .fc-event-main,
+.fc-dayGridMonth-view .fc-event-main {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  height: 100% !important;
+}
+
+/* Adjust month view event size */
+.fc-dayGridMonth-view .fc-daygrid-event {
+  padding: 3px !important;
+  margin: 1px 2px !important;
+}
+
+/* Keep normal display for day view only */
+.fc-timeGridDay-view .fc-event-time {
+  display: inline-block !important;
+}
+
+/* Keep simple status text - no extra information */
+.fc-event-title:after {
+  content: "" !important;
+}
+
+/* Hide any additional information */
+.fc-event-title-container span:not(.fc-event-title) {
+  display: none !important;
+}
+
 </style>
 {% endblock %}
 

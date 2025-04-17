@@ -65,7 +65,7 @@
             <table class="table appointment-table">
                 <thead>
                     <tr>
-                        <th style="width: 40px;"></th>
+                        
                         <th>Time</th>
                         <th>Student</th>
                         <th>Status</th>
@@ -80,9 +80,7 @@
                     
                     {% for appointment in today_appointments %}
                     <tr>
-                        <td>
-                            <input type="checkbox" class="appointment-checkbox" id="app-{{ appointment.id }}">
-                        </td>
+                        
                         <td>{{ appointment.date_time|date:"g:i A" }}</td>
                         <td>{{ appointment.user.get_full_name|default:appointment.user.username }}</td>
                         <td>

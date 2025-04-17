@@ -212,13 +212,127 @@
   display: inline-block !important;
 }
 
+.fc-timeGridWeek-view .fc-event-time,
+.fc-dayGridMonth-view .fc-event-time {
+  display: none !important;
+}
+
+/* Center the "Booked" or "Available" text in week view */
+.fc-timeGridWeek-view .fc-event-title,
+.fc-dayGridMonth-view .fc-event-title {
+  display: block !important;
+  text-align: center !important;
+  font-size: 16px !important;
+  font-weight: 600 !important;
+  margin: 0 auto !important;
+  padding: 5px 0 !important;
+}
+
+/* Make sure vertical alignment is centered */
+.fc-timeGridWeek-view .fc-event-main,
+.fc-dayGridMonth-view .fc-event-main {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  height: 100% !important;
+}
+
+/* Adjust month view event size */
+.fc-dayGridMonth-view .fc-daygrid-event {
+  padding: 3px !important;
+  margin: 1px 2px !important;
+}
+
+/* Keep normal display for day view only */
+.fc-timeGridDay-view .fc-event-time {
+  display: inline-block !important;
+}
+
+/* Keep simple status text - no extra information */
+.fc-event-title:after {
+  content: "" !important;
+}
+
+/* Hide any additional information */
+.fc-event-title-container span:not(.fc-event-title) {
+  display: none !important;
+}
+
+
+.calendar-legend {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    padding: 10px 15px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    margin-bottom: 15px;
+  }
+  
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .color-box {
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  }
+  
+  .color-box.available {
+    background-color: #1a97d4; /* Blue for available */
+  }
+  
+  .color-box.booked {
+    background-color: #6c757d; /* Gray for booked */
+  }
+  
+  .color-box.your-booking {
+    background-color: #6abf69; /* Green for your bookings */
+  }
+  
+  .legend-text {
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
+  }
+  
+  /* Make legend responsive */
+  @media (max-width: 576px) {
+    .calendar-legend {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
+    }
+  }
+
 </style>
 {% endblock %}
 
 {% block content %}
 <div class="container">
     <h1 class="mb-4">Book an Appointment</h1>
-    
+
+    <div class="calendar-legend mb-3">
+        <div class="legend-item">
+          <span class="color-box available"></span>
+          <span class="legend-text">Available Slots</span>
+        </div>
+        <div class="legend-item">
+          <span class="color-box booked"></span>
+          <span class="legend-text">Booked Slots</span>
+        </div>
+        <div class="legend-item">
+          <span class="color-box your-booking"></span>
+          <span class="legend-text">Your Bookings</span>
+        </div>
+      </div>
+
+
     <div class="card mb-4">
         <div class="card-header bg-primary text-white">
             <h4 class="mb-0">Select a Counselor (Optional)</h4>
@@ -247,6 +361,14 @@
         <div class="card-body">
             <div id="calendar"></div>
         </div>
+
+        <div class="card-body">
+            <div class="calendar-legend mb-3">
+                <!-- Legend items here -->
+            </div>
+            <div id="calendar"></div>
+        </div>
+
     </div>
 </div>
 

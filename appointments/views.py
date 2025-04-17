@@ -81,30 +81,48 @@ def complete_appointment(request, appointment_id):
     return render(request, 'appointments/complete_appointment.html', context)
 
 @login_required
+@login_required
 def my_appointments(request):
-    """View all appointments for the logged-in user (serves as History)"""
-    upcoming_appointments = Appointment.objects.filter(
-        user=request.user,
-        date_time__gte=timezone.now(),
-        status='scheduled'
-    ).order_by('date_time')
+    """View appointment history with different views for students vs counselors"""
     
-    completed_appointments = Appointment.objects.filter(
-        user=request.user,
-        status='completed'
-    ).order_by('-date_time')
+    if request.user.user_type == 'counselor':
+        # For counselors - show past appointments organized by date
+        past_appointments = Appointment.objects.filter(
+            counselor=request.user,
+            date_time__lt=timezone.now()  # Only past appointments
+        ).order_by('-date_time')  # Newest first
+        
+        context = {
+            'past_appointments': past_appointments,
+            'is_counselor': True
+        }
+    else:
+        # Keep the original view for regular users
+        upcoming_appointments = Appointment.objects.filter(
+            user=request.user,
+            date_time__gte=timezone.now(),
+            status='scheduled'
+        ).order_by('date_time')
+        
+        completed_appointments = Appointment.objects.filter(
+            user=request.user,
+            status='completed'
+        ).order_by('-date_time')
+        
+        cancelled_appointments = Appointment.objects.filter(
+            user=request.user,
+            status='cancelled'
+        ).order_by('-date_time')
+        
+        context = {
+            'upcoming_appointments': upcoming_appointments,
+            'completed_appointments': completed_appointments,
+            'cancelled_appointments': cancelled_appointments,
+            'is_counselor': False
+        }
     
-    cancelled_appointments = Appointment.objects.filter(
-        user=request.user,
-        status='cancelled'
-    ).order_by('-date_time')
-    
-    context = {
-        'upcoming_appointments': upcoming_appointments,
-        'completed_appointments': completed_appointments,
-        'cancelled_appointments': cancelled_appointments,
-    }
     return render(request, 'appointments/my_appointments.html', context)
+
 
 # Calendar-based appointment booking views
 @login_required

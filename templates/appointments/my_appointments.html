@@ -6,6 +6,61 @@
 <div class="container">
     <h1 class="mb-4">Appointment History</h1>
     
+    {% if is_counselor %}
+    <!-- COUNSELOR VIEW - Past appointments organized by date -->
+    <div class="card">
+        <div class="card-body">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Time</th>
+                        <th>Student</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if past_appointments %}
+                        {% regroup past_appointments by date_time|date:"Y-m-d" as appointment_groups %}
+                        
+                        {% for group in appointment_groups %}
+                            <tr>
+                                <td colspan="4" class="text-primary fw-bold">{{ group.grouper|date:"F d, Y" }}</td>
+                            </tr>
+                            
+                            {% for appointment in group.list %}
+                            <tr>
+                                <td>{{ appointment.date_time|date:"g:i A" }}</td>
+                                <td>{{ appointment.user.get_full_name|default:appointment.user.username }}</td>
+                                <td>
+                                    {% if appointment.status == 'scheduled' %}
+                                        <span class="badge bg-info text-white">Scheduled</span>
+                                    {% elif appointment.status == 'cancelled' %}
+                                        <span class="badge bg-danger text-white">Cancelled</span>
+                                    {% elif appointment.status == 'completed' %}
+                                        <span class="badge bg-success text-white">Completed</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <a href="{% url 'appointments:view_appointment' appointment.id %}" class="btn btn-sm btn-outline-primary">
+                                        <i class="fas fa-eye me-1"></i>View
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="4" class="text-center text-muted py-3">No past appointments found.</td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    {% else %}
+    <!-- REGULAR USER VIEW - Original layout -->
     <!-- Book Appointment Button -->
     <div class="mb-3">
         <a href="{% url 'appointments:booking_calendar' %}" class="btn btn-primary">
@@ -132,5 +187,6 @@
             {% endif %}
         </div>
     </div>
+    {% endif %}
 </div>
 {% endblock %}

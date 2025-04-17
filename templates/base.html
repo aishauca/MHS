@@ -57,7 +57,7 @@
                     {% if user.is_authenticated %}
                         {% if user.user_type == 'counselor' %}
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'accounts:counselor_dashboard' %}">Appointments</a>
+                            <a class="nav-link" href="{% url 'appointments:counselor_appointments_list' %}">Appointments</a>
                         </li>
                         {% else %}
                         <li class="nav-item">
