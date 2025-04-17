@@ -13,6 +13,79 @@
     .modal-body .form-group {
         margin-bottom: 1rem;
     }
+
+    /* Force taller time slots */
+  .fc-timegrid-slot {
+    height: 80px !important;
+  }
+  
+  /* Ensure events have enough space */
+  .fc-timegrid-event {
+    min-height: 50px !important;
+    padding: 8px 10px !important;
+    margin: 3px 5px !important;
+  }
+  
+  /* Make the event text larger and more readable */
+  .fc-event-title, .fc-event-time {
+    font-size: 15px !important;
+    font-weight: 500 !important;
+    white-space: normal !important;
+  }
+  
+  /* Ensure the calendar container is tall enough */
+  .fc-view-harness {
+    min-height: 700px !important;
+  }
+  
+  /* Make sure slot lanes are tall */
+  .fc-timegrid-slot-lane {
+    min-height: 80px !important;
+  }
+  
+  /* Improve available slot appearance */
+  .fc-event.fc-event-start.fc-event-end.fc-event-future {
+    border-radius: 6px !important;
+    box-shadow: 0 3px 5px rgba(0,0,0,0.1) !important;
+  }
+
+  /* Make text visible in month view events */
+  .fc-daygrid-event {
+    white-space: normal !important;
+    overflow: visible !important;
+    background-color: rgba(26, 151, 212, 0.9) !important;
+    color: white !important;
+    font-weight: 500 !important;
+    padding: 4px 6px !important;
+    border-radius: 4px !important;
+    margin: 2px 5px !important;
+  }
+  
+  /* Ensure the event content is visible */
+  .fc-daygrid-event-harness {
+    min-height: 24px !important;
+  }
+  
+  /* Make the dot bigger for dot events */
+  .fc-daygrid-dot-event .fc-event-title {
+    font-weight: bold !important;
+    display: block !important;
+  }
+  
+  /* Ensure the day cell can expand to fit multiple events */
+  .fc-daygrid-day-frame {
+    min-height: 80px !important;
+  }
+  
+  /* Improve hover state */
+  .fc-daygrid-event:hover {
+    background-color: rgba(26, 151, 212, 1) !important;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2) !important;
+    z-index: 5 !important;
+  }
+
+
+
 </style>
 {% endblock %}
 
