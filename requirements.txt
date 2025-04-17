@@ -33,3 +33,5 @@ wheel==0.43.0
 whitenoise==6.9.0
 wrapt==1.16.0
 gunicorn
+psycopg2-binary==2.9.9
+dj-database-url==2.1.0
