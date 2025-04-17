@@ -262,8 +262,7 @@ def get_counselor_slots(request, counselor_id=None):
             'title': 'Booked' if slot.is_booked else 'Available',
             'start': start_datetime.isoformat(),
             'end': end_datetime.isoformat(),
-            'color': '#007bff' if slot.is_booked else '#28a745',  # Blue if booked, green if available
-            'editable': not slot.is_booked,  # Only allow editing available slots
+            'color': '#007bff' if slot.is_booked else '#28a745',
         })
     
     return JsonResponse(data, safe=False)

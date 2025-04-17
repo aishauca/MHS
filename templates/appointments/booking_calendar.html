@@ -14,79 +14,6 @@
         margin-bottom: 20px;
     }
 
-    /* Force taller time slots */
-  .fc-timegrid-slot {
-    height: 80px !important;
-  }
-  
-  /* Ensure events have enough space */
-  .fc-timegrid-event {
-    min-height: 50px !important;
-    padding: 8px 10px !important;
-    margin: 3px 5px !important;
-  }
-  
-  /* Make the event text larger and more readable */
-  .fc-event-title, .fc-event-time {
-    font-size: 15px !important;
-    font-weight: 500 !important;
-    white-space: normal !important;
-  }
-  
-  /* Ensure the calendar container is tall enough */
-  .fc-view-harness {
-    min-height: 700px !important;
-  }
-  
-  /* Make sure slot lanes are tall */
-  .fc-timegrid-slot-lane {
-    min-height: 80px !important;
-  }
-  
-  /* Improve available slot appearance */
-  .fc-event.fc-event-start.fc-event-end.fc-event-future {
-    border-radius: 6px !important;
-    box-shadow: 0 3px 5px rgba(0,0,0,0.1) !important;
-  }
-
- /* Make text visible in month view events */
- .fc-daygrid-event {
-    white-space: normal !important;
-    overflow: visible !important;
-    background-color: rgba(26, 151, 212, 0.9) !important;
-    color: white !important;
-    font-weight: 500 !important;
-    padding: 4px 6px !important;
-    border-radius: 4px !important;
-    margin: 2px 5px !important;
-  }
-  
-  /* Ensure the event content is visible */
-  .fc-daygrid-event-harness {
-    min-height: 24px !important;
-  }
-  
-  /* Make the dot bigger for dot events */
-  .fc-daygrid-dot-event .fc-event-title {
-    font-weight: bold !important;
-    display: block !important;
-  }
-  
-  /* Ensure the day cell can expand to fit multiple events */
-  .fc-daygrid-day-frame {
-    min-height: 80px !important;
-  }
-  
-  /* Improve hover state */
-  .fc-daygrid-event:hover {
-    background-color: rgba(26, 151, 212, 1) !important;
-    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2) !important;
-    z-index: 5 !important;
-  } 
-
-</style>
-
-<style>
     @media (max-width: 768px) {
         .fc-header-toolbar {
             flex-direction: column;
@@ -121,6 +48,170 @@
             margin-bottom: 0.5rem;
         }
     }
+
+    /* Force taller time slots */
+    .fc-timegrid-slot {
+        height: 80px !important;
+    }
+    
+    /* Ensure events have enough space */
+    .fc-timegrid-event {
+        min-height: 60px !important;
+        padding: 8px 10px !important;
+        margin: 3px 5px !important;
+    }
+    
+    /* Make the event text larger and more readable */
+    .fc-event-title, .fc-event-time {
+        font-size: 15px !important;
+        font-weight: 500 !important;
+        white-space: normal !important;
+    }
+    
+    /* Ensure the calendar container is tall enough */
+    .fc-view-harness {
+        min-height: 700px !important;
+    }
+    
+    /* Make sure slot lanes are tall */
+    .fc-timegrid-slot-lane {
+        min-height: 80px !important;
+    }
+    
+    /* Improve available slot appearance */
+    .fc-event.fc-event-start.fc-event-end.fc-event-future {
+        border-radius: 6px !important;
+        box-shadow: 0 3px 5px rgba(0,0,0,0.1) !important;
+    }
+
+    /* Make text visible in month view events */
+    .fc-daygrid-event {
+        white-space: normal !important;
+        overflow: visible !important;
+        background-color: rgba(26, 151, 212, 0.9) !important;
+        color: white !important;
+        font-weight: 500 !important;
+        padding: 4px 6px !important;
+        border-radius: 4px !important;
+        margin: 2px 5px !important;
+    }
+    
+    /* Ensure the event content is visible */
+    .fc-daygrid-event-harness {
+        min-height: 24px !important;
+    }
+    
+    /* Make the dot bigger for dot events */
+    .fc-daygrid-dot-event .fc-event-title {
+        font-weight: bold !important;
+        display: block !important;
+    }
+    
+    /* Ensure the day cell can expand to fit multiple events */
+    .fc-daygrid-day-frame {
+        min-height: 80px !important;
+    }
+    
+    /* Improve hover state */
+    .fc-daygrid-event:hover {
+        background-color: rgba(26, 151, 212, 1) !important;
+        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2) !important;
+        z-index: 5 !important;
+    }
+
+    /* Fix event content layout - make text more compact */
+    .fc-event-main {
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: center !important;
+        height: 100% !important;
+    }
+    
+    /* Make time text larger and bolder */
+    .fc-event-time {
+        font-size: 15px !important;
+        font-weight: 600 !important;
+        margin-bottom: 2px !important;
+    }
+
+    /* Color code available vs booked slots */
+    .user-booked {
+        background-color: #6abf69 !important; /* Soft green for booked */
+        border-color: #6abf69 !important;
+    }
+    
+    /* Hover effects */
+    .fc-timegrid-event:hover {
+        filter: brightness(1.1) !important;
+        box-shadow: 0 3px 8px rgba(0,0,0,0.2) !important;
+        transform: translateY(-1px) !important;
+        transition: all 0.2s ease !important;
+    }
+
+    .fc-event-title {
+        display: inline-block !important;
+        margin-left: 5px !important;
+    }
+
+    .fc-event-time {
+        font-size: 14px !important;
+        font-weight: 600 !important;
+    }
+
+    /* Hide any text after the time in the title for booked slots */
+    .fc-event-title::after {
+        content: "" !important;
+        display: none !important;
+    }
+
+    /* Format event contents to be horizontal and compact */
+    .fc-event-main-frame {
+        display: flex !important;
+        flex-direction: row !important;
+        align-items: center !important;
+        justify-content: flex-start !important;
+    }
+
+    /* Hide detailed information that might be in subtitles */
+    .fc-event-title-container span:not(.fc-event-title) {
+        display: none !important;
+    }
+
+    /* Ensure consistent formatting for different event types */
+    .user-booked .fc-event-main,
+    .fc-timegrid-event .fc-event-main {
+        flex-direction: row !important;
+        align-items: center !important;
+    }
+
+    .fc-timeGridWeek-view .fc-event-time {
+  display: none !important;
+}
+
+/* Center the "Booked" or "Available" text */
+.fc-timeGridWeek-view .fc-event-title {
+  display: block !important;
+  text-align: center !important;
+  font-size: 16px !important;
+  font-weight: 600 !important;
+  margin: 0 auto !important;
+  padding: 10px 0 !important;
+}
+
+/* Make sure vertical alignment is centered */
+.fc-timeGridWeek-view .fc-event-main {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  height: 100% !important;
+}
+
+/* Keep normal display for month and day views */
+.fc-dayGridMonth-view .fc-event-time,
+.fc-timeGridDay-view .fc-event-time {
+  display: inline-block !important;
+}
+
 </style>
 {% endblock %}
 
@@ -265,8 +356,6 @@
             }
         });
         
-
-
         // Filter button functionality
         document.getElementById('filterButton').addEventListener('click', function() {
             var counselorId = document.getElementById('counselorSelect').value;

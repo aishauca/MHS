@@ -84,8 +84,71 @@
     z-index: 5 !important;
   }
 
+    
+   .fc-event-title {
+    display: inline-block !important;
+    margin-left: 5px !important;
+    }
+
+    .fc-event-time {
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    }
+
+    /* Hide any text after the time in the title for booked slots */
+    .fc-event-title::after {
+    content: "" !important;
+    display: none !important;
+    }
+
+    /* Format event contents to be horizontal and compact */
+    .fc-event-main-frame {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    }
+
+    /* Hide detailed information that might be in subtitles */
+    .fc-event-title-container span:not(.fc-event-title) {
+    display: none !important;
+    }
+
+    /* Ensure consistent formatting for different event types */
+    .user-booked .fc-event-main,
+    .fc-timegrid-event .fc-event-main {
+    flex-direction: row !important;
+    align-items: center !important;
+    }
 
 
+    .fc-timeGridWeek-view .fc-event-time {
+  display: none !important;
+}
+
+/* Center the "Booked" or "Available" text */
+.fc-timeGridWeek-view .fc-event-title {
+  display: block !important;
+  text-align: center !important;
+  font-size: 16px !important;
+  font-weight: 600 !important;
+  margin: 0 auto !important;
+  padding: 10px 0 !important;
+}
+
+/* Make sure vertical alignment is centered */
+.fc-timeGridWeek-view .fc-event-main {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  height: 100% !important;
+}
+
+/* Keep normal display for month and day views */
+.fc-dayGridMonth-view .fc-event-time,
+.fc-timeGridDay-view .fc-event-time {
+  display: inline-block !important;
+}
 </style>
 {% endblock %}
 
