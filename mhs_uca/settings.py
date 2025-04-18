@@ -87,18 +87,16 @@ TEMPLATES = [
 WSGI_APPLICATION = "mhs_uca.wsgi.application"
 
 # Database
-if os.getenv("DATABASE_URL"):
-    import dj_database_url
-    DATABASES = {
-        'default': dj_database_url.config(default=os.getenv("DATABASE_URL"))
+DATABASES = {
+    'default': {
+        'ENGINE': os.getenv("ENGINE"),
+        'NAME': os.getenv("PGNAME"),
+        'USER': os.getenv("PGUSER"),
+        'PASSWORD': os.getenv("PGPASSWORD"),
+        'HOST': os.getenv("PGHOST"),
+        'PORT': os.getenv("PGPORT"),
     }
-else:
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.sqlite3",
-            "NAME": BASE_DIR / "db.sqlite3",
-        }
-    }
+}
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
