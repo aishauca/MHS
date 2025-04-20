@@ -499,5 +499,122 @@
             document.getElementById('bookingForm').submit();
         });
     });
+
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // Make sure FullCalendar is available
+        if (typeof FullCalendar === 'undefined') {
+            console.error('FullCalendar not loaded properly');
+            return;
+        }
+        
+        var calendarEl = document.getElementById('calendar');
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: window.innerWidth < 768 ? 'timeGridDay' : 'timeGridWeek',
+            headerToolbar: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'dayGridMonth,timeGridWeek,timeGridDay'
+            },
+            slotMinTime: '09:00:00',
+            slotMaxTime: '18:00:00',
+            slotDuration: '01:00:00', // 1-hour slots
+            height: 'auto',
+            allDaySlot: false,
+            eventTimeFormat: {
+                hour: '2-digit',
+                minute: '2-digit',
+                meridiem: 'short'
+            },
+                
+            events: '{% url "appointments:get_available_slots" %}',
+            eventClick: function(info) {
+                // Don't allow booking of slots the user already booked
+                if (info.event.classNames && info.event.classNames.includes('user-booked')) {
+                    // Maybe show a message that this is already booked
+                    alert('You already have this appointment booked');
+                    return;
+                }
+
+                // Show booking modal
+                var slot = info.event;
+                var startTime = new Date(slot.start);
+                var endTime = new Date(slot.end);
+                
+                // Format date and time
+                var dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+                var timeOptions = { hour: '2-digit', minute: '2-digit' };
+                
+                document.getElementById('appointmentDate').textContent = startTime.toLocaleDateString(undefined, dateOptions);
+                document.getElementById('appointmentTime').textContent = 
+                    startTime.toLocaleTimeString([], timeOptions) + ' - ' + 
+                    endTime.toLocaleTimeString([], timeOptions);
+                document.getElementById('appointmentCounselor').textContent = slot.title.replace('Available with ', '');
+                document.getElementById('timeSlotId').value = slot.id;
+                
+                // Set form action URL
+                document.getElementById('bookingForm').action = 
+                    '{% url "appointments:create_appointment_from_slot" 0 %}'.replace('0', slot.id);
+                
+                // Show modal
+                var bookingModal = new bootstrap.Modal(document.getElementById('bookingModal'));
+                bookingModal.show();
+            }
+        });
+        
+        calendar.render();
+
+        // Store calendar instance in the DOM element for easy access later
+        calendarEl._calendar = calendar;
+
+        // Add handler for when the page becomes visible again
+        document.addEventListener('visibilitychange', function() {
+            if (document.visibilityState === 'visible' && calendarEl._calendar) {
+                // Refresh events when tab becomes visible again
+                calendarEl._calendar.refetchEvents();
+            }
+        });
+
+        // Handle back navigation for calendar pages specifically
+        window.addEventListener('pageshow', function(event) {
+            if (event.persisted && calendarEl._calendar) {
+                // Force refresh events when returning via back button
+                setTimeout(() => {
+                    calendarEl._calendar.refetchEvents();
+                }, 100);
+            }
+        });
+
+        // Handle window resize for responsive views
+        window.addEventListener('resize', function() {
+            if (window.innerWidth < 768) {
+                calendar.changeView('timeGridDay');
+            } else {
+                calendar.changeView('timeGridWeek');
+            }
+        });
+        
+        // Filter button functionality
+        document.getElementById('filterButton').addEventListener('click', function() {
+            var counselorId = document.getElementById('counselorSelect').value;
+            var eventsUrl = '';
+            
+            if (counselorId === 'all') {
+                eventsUrl = '{% url "appointments:get_available_slots" %}';
+            } else {
+                eventsUrl = '{% url "appointments:get_counselor_slots" 0 %}'.replace('0', counselorId);
+            }
+            
+            // Remove old events and add new ones
+            calendar.removeAllEvents();
+            calendar.addEventSource(eventsUrl);
+        });
+        
+        // Handle booking submission
+        document.getElementById('confirmBooking').addEventListener('click', function() {
+            document.getElementById('bookingForm').submit();
+        });
+    });
+
 </script>
 {% endblock %}

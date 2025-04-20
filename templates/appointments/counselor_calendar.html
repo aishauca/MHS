@@ -316,5 +316,74 @@
         
         calendar.render();
     });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // Make sure FullCalendar is available
+        if (typeof FullCalendar === 'undefined') {
+            console.error('FullCalendar not loaded properly');
+            return;
+        }
+        
+        var calendarEl = document.getElementById('calendar');
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'timeGridWeek',
+            headerToolbar: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'dayGridMonth,timeGridWeek,timeGridDay'
+            },
+            slotMinTime: '09:00:00',
+            slotMaxTime: '18:00:00',
+            slotDuration: '01:00:00', // 1-hour slots
+            height: 'auto',
+            allDaySlot: false,
+            events: '{% url "appointments:get_own_slots" %}',
+            eventClick: function(info) {
+                // Don't allow editing of booked slots
+                if (info.event.title === 'Booked') {
+                    return;
+                }
+                
+                // Show delete modal for available slots
+                var startDate = new Date(info.event.start);
+                var endDate = new Date(info.event.end);
+                
+                document.getElementById('slotDate').textContent = startDate.toLocaleDateString();
+                document.getElementById('slotTime').textContent = 
+                    startDate.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'}) + 
+                    ' - ' + 
+                    endDate.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});
+                
+                document.getElementById('deleteSlotForm').action = 
+                    '{% url "appointments:delete_time_slot" 0 %}'.replace('0', info.event.id);
+                
+                var deleteModal = new bootstrap.Modal(document.getElementById('deleteSlotModal'));
+                deleteModal.show();
+            }
+        });
+        
+        calendar.render();
+        
+        // Store calendar instance in the DOM element for easy access later
+        calendarEl._calendar = calendar;
+
+        // Add handler for when the page becomes visible again
+        document.addEventListener('visibilitychange', function() {
+            if (document.visibilityState === 'visible' && calendarEl._calendar) {
+                // Refresh events when tab becomes visible again
+                calendarEl._calendar.refetchEvents();
+            }
+        });
+
+        // Handle back navigation for calendar pages specifically
+        window.addEventListener('pageshow', function(event) {
+            if (event.persisted && calendarEl._calendar) {
+                // Force refresh events when returning via back button
+                setTimeout(() => {
+                    calendarEl._calendar.refetchEvents();
+                }, 100);
+            }
+        });
+    });
 </script>
 {% endblock %}

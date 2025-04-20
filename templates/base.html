@@ -24,7 +24,7 @@
     <style>
         /* Page transition styling */
         body {
-            visibility: visible; /* Set to visible by default for non-JS users */
+            visibility: visible !important; /* Force visible by default */
         }
         
         main {
@@ -182,11 +182,37 @@
     
     <!-- Page transition and error handling script -->
     <script>
-        // Smooth page transitions
+        // Smooth page transitions with improved back navigation handling
         document.addEventListener('DOMContentLoaded', function() {
+            // Force page visibility
+            document.body.style.visibility = 'visible';
+            
             // Remove transition class after page load
             document.body.classList.remove('page-transition-active');
             
+            // Handle history navigation events (back/forward buttons)
+            window.addEventListener('pageshow', function(event) {
+                // Force visible body when using back button (works with bfcache)
+                document.body.style.visibility = 'visible';
+                document.body.classList.remove('page-transition-active');
+                
+                // If the page is restored from bfcache
+                if (event.persisted) {
+                    // Force reload necessary components
+                    if (typeof FullCalendar !== 'undefined' && document.getElementById('calendar')) {
+                        try {
+                            // Attempt to refresh calendar if it exists
+                            const calendarEl = document.getElementById('calendar');
+                            if (calendarEl._calendar) {
+                                calendarEl._calendar.render();
+                            }
+                        } catch (e) {
+                            console.log('Calendar refresh failed, not critical');
+                        }
+                    }
+                }
+            });
+
             // Add transition class on link clicks for internal links
             document.querySelectorAll('a').forEach(link => {
                 if (link.hostname === window.location.hostname && !link.hasAttribute('data-no-transition')) {
@@ -199,6 +225,12 @@
                             this.getAttribute('href').startsWith('#')) return;
                         
                         document.body.classList.add('page-transition-active');
+                        
+                        // Set a timeout to ensure visibility is restored if navigation is cancelled
+                        setTimeout(() => {
+                            document.body.classList.remove('page-transition-active');
+                            document.body.style.visibility = 'visible';
+                        }, 1000);
                     });
                 }
             });
