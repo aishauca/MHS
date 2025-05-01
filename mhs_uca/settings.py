@@ -218,35 +218,36 @@ if not DEBUG:
 
 
 # Add robust logging to see SMTP errors
-    LOGGING = {
-        'version': 1,
-        'disable_existing_loggers': False,
-        'handlers': {
-            'file': {
-                'level': 'ERROR',
-                'class': 'logging.FileHandler',
-                'filename': os.path.join(BASE_DIR, 'django_error.log'),
-            },
-        },
-        'loggers': {
-            'django': {
-                'handlers': ['file'],
-                'level': 'ERROR',
-                'propagate': True,
-            },
-            'django.request': {
-                'handlers': ['file'],
-                'level': 'ERROR',
-                'propagate': False,
-            },
-            'django.mail': {
-                'handlers': ['file'],
-                'level': 'ERROR',
-                'propagate': True,
-            },
-            'django.db.backends': {
-            'handlers': ['console', 'file'],
+    # Replace your current LOGGING config with this one
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'file': {
             'level': 'ERROR',
+            'class': 'logging.FileHandler',
+            'filename': os.path.join(BASE_DIR, 'django_error.log'),
         },
-       }
-    }
+        # Add the missing console handler
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['file'],  # Keep using only file handler here
+            'level': 'ERROR',
+            'propagate': True,
+        },
+        'django.request': {
+            'handlers': ['file'],
+            'level': 'ERROR',
+            'propagate': False,
+        },
+        'django.mail': {
+            'handlers': ['file'],
+            'level': 'ERROR',
+            'propagate': True,
+        },
+    },
+}
