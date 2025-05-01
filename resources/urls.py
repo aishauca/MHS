@@ -5,6 +5,8 @@ app_name = 'resources'
 
 urlpatterns = [
     # Admin URLs for managing resources - these need to come BEFORE the slug pattern
+   # Add to resources/urls.py near the top of urlpatterns:
+    path('safe-test/', views.safe_test, name='safe_test'),
     path('add/', views.add_resource, name='add_resource'),
     path('edit/<int:resource_id>/', views.edit_resource, name='edit_resource'),
     path('delete/<int:resource_id>/', views.delete_resource, name='delete_resource'),

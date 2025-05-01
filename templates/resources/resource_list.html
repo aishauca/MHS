@@ -108,7 +108,11 @@
                                     <p class="card-text text-muted small mb-2">{{ resource.get_resource_type_display }}</p>
                                     <p class="card-text">{{ resource.description|truncatewords:15 }}</p>
                                     <div class="mt-auto">
+                                        {% if resource.slug %}
                                         <a href="{% url 'resources:resource_detail' resource.slug %}" class="btn btn-primary btn-sm">View Details</a>
+                                        {% else %}
+                                        <button class="btn btn-primary btn-sm disabled">View Details</button>
+                                        {% endif %}
                                         
                                         {% if resource.file %}
                                         <a href="{{ resource.file.url }}" class="btn btn-outline-primary btn-sm" download>

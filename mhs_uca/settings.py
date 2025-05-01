@@ -244,5 +244,9 @@ if not DEBUG:
                 'level': 'ERROR',
                 'propagate': True,
             },
+            'django.db.backends': {
+            'handlers': ['console', 'file'],
+            'level': 'ERROR',
         },
+       }
     }

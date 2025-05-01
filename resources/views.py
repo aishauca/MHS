@@ -6,6 +6,18 @@ from django.http import JsonResponse
 from .models import Resource, ResourceCategory, ResourceFavorite
 from .forms import ResourceForm, ResourceCategoryForm
 from accounts.views import user_type_required
+from django.http import HttpResponse
+
+def safe_test(request):
+    """A completely safe test that doesn't modify any data"""
+    try:
+        # Just import models without querying
+        from resources.models import Resource, ResourceCategory
+        
+        # Return a simple response
+        return HttpResponse("Resources app is loading correctly.")
+    except Exception as e:
+        return HttpResponse(f"Error: {str(e)}")
 
 # Custom permission check for counselors and admin staff
 def is_counselor_or_admin(user):
@@ -113,6 +125,25 @@ def edit_category(request, category_id):
     }
     return render(request, 'resources/category_form.html', context)
 
+
+def temp_resource_list(request):
+    """Simplified resource list view that skips problematic queries"""
+    from django.db.models import Q
+    from .models import Resource, ResourceCategory
+    
+    categories = ResourceCategory.objects.all()
+    
+    # Filter out resources with empty slugs
+    resources = Resource.objects.exclude(slug='')
+    
+    context = {
+        'resources': resources,
+        'categories': categories,
+        'selected_category': None,
+        'search_query': '',
+        'favorite_ids': []  # Empty list to avoid problematic queries
+    }
+    return render(request, 'resources/resource_list.html', context)
 
 @login_required
 def resource_list(request):
