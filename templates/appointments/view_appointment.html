@@ -59,7 +59,14 @@
                     <div class="mt-4">
                         {% if appointment.status == 'scheduled' %}
                             {% if user.user_type == 'counselor' %}
-                                <a href="{% url 'appointments:complete_appointment' appointment.id %}" class="btn btn-success">Mark as Completed</a>
+                            <a href="#" class="btn btn-success" 
+                                data-bs-toggle="modal" 
+                                data-bs-target="#completeAppointmentModal" 
+                                data-appointment-id="{{ appointment.id }}"
+                                data-appointment-date="{{ appointment.date_time|date:'F d, Y' }}"
+                                data-appointment-time="{{ appointment.date_time|time:'g:i A' }}">
+                                Mark as Completed
+                         </a>
                             {% endif %}
                             <a href="#" class="btn btn-danger" 
                                 data-bs-toggle="modal" 

@@ -50,8 +50,14 @@
                         
                         {% if user.is_superuser or user.user_type == 'counselor' %}
                         <a href="{% url 'resources:edit_resource' resource.id %}" class="btn btn-warning">Edit Resource</a>
-                        <a href="{% url 'resources:delete_resource' resource.id %}" class="btn btn-danger">Delete Resource</a>
-                        {% endif %}
+                        <a href="#" class="btn btn-danger"
+                            data-bs-toggle="modal"
+                            data-bs-target="#deleteResourceModal"
+                            data-resource-id="{{ resource.id }}"
+                            data-resource-title="{{ resource.title }}">
+                             Delete Resource
+                         </a>
+                                                    {% endif %}
                         
                         <a href="{% url 'resources:resource_list' %}" class="btn btn-secondary">Back to Resources</a>
                     </div>

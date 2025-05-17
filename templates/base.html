@@ -425,7 +425,6 @@
     </div>
 </div>
 
-
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         // Handle cancel appointment modal
@@ -448,9 +447,90 @@
             });
         }
         
-        // Similar event listeners for other modals
-        // ...
+        // Handle logout modal
+        var logoutModal = document.getElementById('logoutModal');
+        if (logoutModal) {
+            logoutModal.addEventListener('show.bs.modal', function(event) {
+                // Make sure the form action is correct
+                var form = logoutModal.querySelector('form');
+                if (form) {
+                    form.action = "{% url 'accounts:logout' %}";
+                }
+            });
+        }
+
+        // Handle delete account modal
+        var deleteAccountModal = document.getElementById('deleteAccountModal');
+        if (deleteAccountModal) {
+            deleteAccountModal.addEventListener('show.bs.modal', function(event) {
+                // Make sure the form action is correct
+                var form = deleteAccountModal.querySelector('form');
+                if (form) {
+                    form.action = "{% url 'accounts:delete_profile' %}";
+                }
+            });
+        }
+
+        // Handle complete appointment modal
+        var completeAppointmentModal = document.getElementById('completeAppointmentModal');
+        if (completeAppointmentModal) {
+            completeAppointmentModal.addEventListener('show.bs.modal', function(event) {
+                var button = event.relatedTarget;
+                var appointmentId = button.getAttribute('data-appointment-id');
+                var date = button.getAttribute('data-appointment-date');
+                var time = button.getAttribute('data-appointment-time');
+                
+                // Update the form action
+                var form = document.getElementById('completeAppointmentForm');
+                form.action = '/appointments/complete/' + appointmentId + '/';
+                
+                // Update the appointment details
+                var details = document.getElementById('completeAppointmentDetails');
+                details.innerHTML = '<p><strong>Date:</strong> ' + date + '</p>' +
+                                   '<p><strong>Time:</strong> ' + time + '</p>';
+            });
+        }
+
+        // Handle cancel event registration modal
+        var cancelEventModal = document.getElementById('cancelEventRegistrationModal');
+        if (cancelEventModal) {
+            cancelEventModal.addEventListener('show.bs.modal', function(event) {
+                var button = event.relatedTarget;
+                var eventId = button.getAttribute('data-event-id');
+                var title = button.getAttribute('data-event-title');
+                var date = button.getAttribute('data-event-date');
+                
+                // Update the form action
+                var form = document.getElementById('cancelEventRegistrationForm');
+                form.action = '/news/events/' + eventId + '/unregister/';
+                
+                // Update the event details
+                var details = document.getElementById('eventDetails');
+                details.innerHTML = '<p><strong>Event:</strong> ' + title + '</p>' +
+                                  '<p><strong>Date:</strong> ' + date + '</p>';
+            });
+        }
+
+        // Handle delete resource modal
+        var deleteResourceModal = document.getElementById('deleteResourceModal');
+        if (deleteResourceModal) {
+            deleteResourceModal.addEventListener('show.bs.modal', function(event) {
+                var button = event.relatedTarget;
+                var resourceId = button.getAttribute('data-resource-id');
+                var title = button.getAttribute('data-resource-title');
+                
+                // Update the form action
+                var form = document.getElementById('deleteResourceForm');
+                form.action = '/resources/delete/' + resourceId + '/';
+                
+                // Update the resource details
+                var details = document.getElementById('resourceDetails');
+                details.innerHTML = '<p><strong>Resource:</strong> ' + title + '</p>';
+            });
+        }
     });
 </script>
+
+
 </body>
 </html>
