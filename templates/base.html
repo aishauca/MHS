@@ -93,7 +93,7 @@
                             {% endif %}
                             
                             <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="{% url 'accounts:logout' %}">Log Out</a></li>
+                            <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#logoutModal">Log Out</a></li>
                         </ul>
                     </li>
                     {% else %}
@@ -278,5 +278,179 @@
             }
         });
     </script>
+
+<!-- Logout Modal -->
+<div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="logoutModalLabel">Log Out</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to log out?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <form method="post" action="{% url 'accounts:logout' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">Yes, Log Out</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Account Modal -->
+<div class="modal fade" id="deleteAccountModal" tabindex="-1" aria-labelledby="deleteAccountModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title" id="deleteAccountModalLabel">Delete Your Account</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-warning">
+                    <p><strong>Warning:</strong> Deleting your account is permanent and cannot be undone. All your data, including appointment history, will be permanently removed.</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <form method="post" action="{% url 'accounts:delete_profile' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">Yes, Delete My Account</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add to base.html -->
+<div class="modal fade" id="cancelAppointmentModal" tabindex="-1" aria-labelledby="cancelAppointmentModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title" id="cancelAppointmentModalLabel">Cancel Appointment</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to cancel this appointment?</p>
+                <div id="appointmentDetails" class="alert alert-info">
+                    <!-- This will be filled dynamically with JavaScript -->
+                </div>
+                <form id="cancelAppointmentForm" method="post" action="">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="cancellationReason" class="form-label">Reason for cancellation (optional)</label>
+                        <textarea name="cancellation_reason" id="cancellationReason" class="form-control" rows="3"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Keep Appointment</button>
+                <button type="button" class="btn btn-danger" onclick="document.getElementById('cancelAppointmentForm').submit()">Yes, Cancel Appointment</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Add to base.html -->
+<div class="modal fade" id="completeAppointmentModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title">Complete Appointment</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to mark this appointment as completed?</p>
+                <div id="completeAppointmentDetails" class="alert alert-info"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <form id="completeAppointmentForm" method="post" action="">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-success">Yes, Mark as Completed</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add to base.html -->
+<div class="modal fade" id="cancelEventRegistrationModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-warning text-white">
+                <h5 class="modal-title">Cancel Registration</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to cancel your registration for this event?</p>
+                <div id="eventDetails" class="alert alert-info"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Keep Registration</button>
+                <form id="cancelEventRegistrationForm" method="post" action="">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-warning">Yes, Cancel Registration</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add to base.html -->
+<div class="modal fade" id="deleteResourceModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title">Delete Resource</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete this resource?</p>
+                <div id="resourceDetails" class="alert alert-info"></div>
+                <p class="text-danger"><strong>Warning:</strong> This action cannot be undone.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <form id="deleteResourceForm" method="post" action="">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">Yes, Delete Resource</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Handle cancel appointment modal
+        var cancelAppointmentModal = document.getElementById('cancelAppointmentModal');
+        if (cancelAppointmentModal) {
+            cancelAppointmentModal.addEventListener('show.bs.modal', function(event) {
+                var button = event.relatedTarget;
+                var appointmentId = button.getAttribute('data-appointment-id');
+                var date = button.getAttribute('data-appointment-date');
+                var time = button.getAttribute('data-appointment-time');
+                
+                // Update the form action
+                var form = document.getElementById('cancelAppointmentForm');
+                form.action = '/appointments/cancel/' + appointmentId + '/';
+                
+                // Update the appointment details
+                var details = document.getElementById('appointmentDetails');
+                details.innerHTML = '<p><strong>Date:</strong> ' + date + '</p>' +
+                                   '<p><strong>Time:</strong> ' + time + '</p>';
+            });
+        }
+        
+        // Similar event listeners for other modals
+        // ...
+    });
+</script>
 </body>
 </html>

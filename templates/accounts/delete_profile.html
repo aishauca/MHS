@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block title %}Delete Account - UCA Mental Health Services{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 offset-md-3 mt-5">
+            <div class="card">
+                <div class="card-header bg-danger text-white">
+                    <h2 class="card-title mb-0">Delete Your Account</h2>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-warning">
+                        <p><strong>Warning:</strong> Deleting your account is permanent and cannot be undone. All your data, including appointment history, will be permanently removed.</p>
+                    </div>
+                    
+                    <form method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger">Yes, Delete My Account</button>
+                        <a href="{% url 'accounts:profile' %}" class="btn btn-secondary">Cancel</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

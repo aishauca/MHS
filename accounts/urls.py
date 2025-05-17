@@ -15,7 +15,7 @@ urlpatterns = [
     path('profile/', views.profile, name='profile'),
     path('profile/edit/', views.edit_profile, name='edit_profile'),
     path('counselor-dashboard/', views.counselor_dashboard, name='counselor_dashboard'),
-    
+    path('profile/delete/', views.delete_profile, name='delete_profile'),
     # Password reset URLs - Use Django's built-in views
     path('password-reset/', 
          auth_views.PasswordResetView.as_view(

@@ -116,7 +116,19 @@ def verify_email(request, token):
         return render(request, 'accounts/verification_error.html', {'error': str(e)})
 
 
-        
+ 
+def delete_profile(request):
+    """View for users to delete their own profile"""
+    if request.method == 'POST':
+        user = request.user
+        # Log the user out
+        logout(request)
+        # Delete the user
+        user.delete()
+        messages.success(request, "Your account has been deleted successfully.")
+        return redirect('accounts:home')
+    
+    return render(request, 'accounts/delete_profile.html')       
 
 def user_login(request):
     if request.method == 'POST':
